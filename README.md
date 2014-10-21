@@ -46,7 +46,7 @@ mondrianSchemaFile=/path/to/mondrian-schema.xml
 locale=en_US
 
 # fixed saiku user / password
-saikuUsername=asfd
+saikuUsername=asdf
 saikuPassword=asdf
 ```
 
