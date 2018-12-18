@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="org.saiku" />
+    <context:component-scan base-package="com.projecta" />
+
+    <import resource="applicationContext-saiku.xml" />
+    <import resource="saiku-beans.xml" />
+    <import resource="spring-servlet.xml" />
+
+    <bean id="h2database" class="org.saiku.database.Database"/>
+
+    <!-- Overwrite sessionService with own implementation -->
+    <bean id="sessionService" class="com.projecta.monsai.saiku.MonsaiSessionService"/>
+
+    <!-- Overwrite connectionManager with own implementation -->
+    <bean id="connectionManager" class="com.projecta.monsai.saiku.MonsaiConnectionManager"
+        init-method="init" destroy-method="destroy" depends-on="mondrianVFS">
+        <property name="dataSourceManager" ref="repositoryDsManager"/>
+        <property name="sessionService" ref="sessionService"/>
+    </bean>
+
+</beans>

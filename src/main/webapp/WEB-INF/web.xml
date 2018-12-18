@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<!--
+    This web.xml is a partial copy of saiku/saiku-webapp/src/main/webapp/WEB-INF/web.xml
+    with some custom functiality added
+-->
+<web-app metadata-complete="true">
+
+    <display-name>monsai</display-name>
+
+    <!-- General configuration -->
+    <context-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.url</param-name>
+        <param-value>jdbc:h2:./monsai/data/saiku;MODE=MySQL</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.user</param-name>
+        <param-value>sa</param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.password</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.encryptpassword</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>foodmart.url</param-name>
+        <param-value>jdbc:h2:./monsai/data/foodmart;MODE=MySQL</param-value>
+    </context-param>
+    <context-param>
+        <param-name>foodmart.user</param-name>
+        <param-value>sa</param-value>
+    </context-param>
+    <context-param>
+        <param-name>foodmart.password</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <param-name>earthquakes.url</param-name>
+        <param-value>jdbc:h2:./monsai/data/earthquakes;MODE=MySQL</param-value>
+    </context-param>
+    <context-param>
+        <param-name>earthquakes.user</param-name>
+        <param-value>sa</param-value>
+    </context-param>
+    <context-param>
+        <param-name>earthquakes.password</param-name>
+        <param-value></param-value>
+    </context-param>
+    <context-param>
+        <param-name>db.tcpServer</param-name>
+        <param-value>-tcpAllowOthers</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
+    </context-param>
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+
+    <filter>
+        <filter-name>org.springframework.security.filterChainProxy</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>org.springframework.security.filterChainProxy</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+
+    <!-- Jersey servlet -->
+    <servlet>
+        <servlet-name>jersey2</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>org.saiku.web;com.fasterxml.jackson.jaxrs.json</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.feature.Trace</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>org.saiku.web.rest.SerializableProvider</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey2</servlet-name>
+        <url-pattern>/saiku/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <absolute-ordering />
+
+</web-app>
