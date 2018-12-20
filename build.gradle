@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'war'
 
-defaultTasks 'clean', 'cleanEclipse', 'eclipse', 'mergeSaiku', 'downloadMondrian' //, 'war'
+defaultTasks 'clean', 'cleanEclipse', 'eclipse', 'mergeSaiku', 'war'
 
 /*
  * Version configuration
@@ -74,6 +74,12 @@ task mergeSaiku(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
             from 'saiku/saiku-webapp/src/main/webapp/WEB-INF'
             into 'tmp/main/webapp/WEB-INF'
         }
+
+        // delete non-needed files
+        delete 'tmp/main/webapp/js/saiku/plugins/AdminConsole'
+        delete 'tmp/main/webapp/js/saiku/plugins/I18n'
+        delete 'tmp/main/webapp/js/saiku/plugins/Intro'
+
 
         // include own web app files
         copy {
@@ -183,9 +189,8 @@ dependencies {
     compile 'org.springframework:spring-jdbc:4.1.6.RELEASE'
     compile 'org.springframework:spring-tx:4.1.6.RELEASE'
     compile 'org.springframework:spring-web:4.1.6.RELEASE'
+    compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
 
-
-    // database drivers
     compile 'org.postgresql:postgresql:42.2.5'
     compile 'monetdb:monetdb-jdbc:11.19.15'
 
@@ -204,6 +209,9 @@ war {
     archiveName 'monsai.war'
     destinationDir file('.')
     from 'tmp/main/webapp'
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 
     outputs.upToDateWhen { false }
 }

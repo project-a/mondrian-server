@@ -9,8 +9,7 @@ import com.projecta.monsai.mondrian.MondrianConnector;
 
 /**
  * Extension of SecurityAwareConnectionManager that always uses the internal
- * datasource and prevents the user from flushing the caches
- *
+ * datasource
  */
 public class MonsaiConnectionManager extends SecurityAwareConnectionManager {
 

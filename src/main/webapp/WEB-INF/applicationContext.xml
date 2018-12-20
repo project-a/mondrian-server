@@ -3,23 +3,46 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:context="http://www.springframework.org/schema/context"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <mvc:annotation-driven />
+    <mvc:resources mapping="/**" location="/" />
 
     <context:annotation-config />
     <context:component-scan base-package="org.saiku" />
     <context:component-scan base-package="com.projecta" />
 
-    <import resource="applicationContext-saiku.xml" />
     <import resource="saiku-beans.xml" />
     <import resource="spring-servlet.xml" />
 
+    <!-- Disable database init call -->
     <bean id="h2database" class="org.saiku.database.Database"/>
 
-    <!-- Overwrite sessionService with own implementation -->
+    <!-- Overwrite several services with own implementation -->
+    <bean id="repositoryDsManager" class="com.projecta.monsai.saiku.MonsaiDatasourceManager" />
     <bean id="sessionService" class="com.projecta.monsai.saiku.MonsaiSessionService"/>
+    <bean id="licenseUtils" class="com.projecta.monsai.saiku.MonsaiLicenseUtils"/>
+    <bean id="userDAO" class="com.projecta.monsai.saiku.MonsaiUserDao"/>
 
-    <!-- Overwrite connectionManager with own implementation -->
+    <bean id="userServiceBean" class="com.projecta.monsai.saiku.MonsaiUserService">
+        <property name="jdbcUserDAO" ref="userDAO"/>
+        <property name="datasourceService" ref="datasourceServiceBean"/>
+        <property name="iDatasourceManager" ref="repositoryDsManager"/>
+        <property name="adminRoles">
+            <list>
+                <value>ROLE_ADMIN</value>
+            </list>
+        </property>
+        <property name="sessionService" ref="sessionService"/>
+    </bean>
+
+    <bean id="platformBean" class="com.projecta.monsai.saiku.MonsaiPlatformUtilsService">
+        <property name="path" value=""/>
+    </bean>
+
     <bean id="connectionManager" class="com.projecta.monsai.saiku.MonsaiConnectionManager"
         init-method="init" destroy-method="destroy" depends-on="mondrianVFS">
         <property name="dataSourceManager" ref="repositoryDsManager"/>

@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.projecta.monsai.config.Config;
+import com.projecta.monsai.saiku.MonsaiConnectionManager;
 import com.projecta.monsai.saiku.OlapConnectionProxy;
+import com.projecta.monsai.sql.SqlProxy;
 
 import mondrian.olap.MondrianServer;
 import mondrian.rolap.RolapUtil;
@@ -36,13 +38,13 @@ import mondrian.xmla.XmlaServlet;
 @Component
 public class MondrianConnector {
 
-    @Autowired private Config          config;
-    @Autowired private SchemaProcessor schemaProcessor;
-    // @Autowired private SaikuConnectionManager connectionManager;
+    @Autowired private Config                  config;
+    @Autowired private SchemaProcessor         schemaProcessor;
+    @Autowired private MonsaiConnectionManager connectionManager;
 
-    private static MondrianServer      server;
-    private static String              dataSourceName;
-    private static String              catalogName;
+    private static MondrianServer server;
+    private static String         dataSourceName;
+    private static String         catalogName;
 
     private static final String JDBC_DRIVERS = "org.postgresql.Driver,nl.cwi.monetdb.jdbc.MonetDriver";
 
@@ -85,8 +87,9 @@ public class MondrianConnector {
                     + config.getProperty("databaseName");
         }
 
-        // @SuppressWarnings( "unused" )
-        // SqlRewriterProxy<Object> proxy = new SqlRewriterProxy<Object>();
+        // initialize the sql proxy
+        @SuppressWarnings( "unused" )
+        SqlProxy proxy = new SqlProxy();
 
         // generate xml DataSources configuration
         Element dataSources = new Element("DataSources");
@@ -136,12 +139,9 @@ public class MondrianConnector {
 
         // store mondrian specific properties as system properties, where
         // mondrian will find them
-        for (Entry<Object, Object> entry : config.getProperties().entrySet()) {
-            String key = (String) entry.getKey();
-            String value = (String) entry.getValue();
-
-            if (key.startsWith("mondrian.")) {
-                System.setProperty(key, value);
+        for (Entry<String, String> entry : config.getProperties().entrySet()) {
+            if (entry.getKey().startsWith("mondrian.")) {
+                System.setProperty(entry.getKey(), entry.getValue());
             }
         }
 
@@ -231,7 +231,7 @@ public class MondrianConnector {
             response += "reinitialized mondrian server\n";
 
             OlapConnectionProxy.closeAllConnections();
-            // connectionManager.refreshAllConnections();
+            connectionManager.refreshAllConnections();
             response += "reinitialized saiku connections\n";
 
             // SqlRewriter.clearCache();

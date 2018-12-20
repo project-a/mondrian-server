@@ -16,50 +16,6 @@
         <param-name>encoding</param-name>
         <param-value>UTF-8</param-value>
     </context-param>
-    <context-param>
-        <param-name>db.url</param-name>
-        <param-value>jdbc:h2:./monsai/data/saiku;MODE=MySQL</param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.user</param-name>
-        <param-value>sa</param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.password</param-name>
-        <param-value></param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.encryptpassword</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>foodmart.url</param-name>
-        <param-value>jdbc:h2:./monsai/data/foodmart;MODE=MySQL</param-value>
-    </context-param>
-    <context-param>
-        <param-name>foodmart.user</param-name>
-        <param-value>sa</param-value>
-    </context-param>
-    <context-param>
-        <param-name>foodmart.password</param-name>
-        <param-value></param-value>
-    </context-param>
-    <context-param>
-        <param-name>earthquakes.url</param-name>
-        <param-value>jdbc:h2:./monsai/data/earthquakes;MODE=MySQL</param-value>
-    </context-param>
-    <context-param>
-        <param-name>earthquakes.user</param-name>
-        <param-value>sa</param-value>
-    </context-param>
-    <context-param>
-        <param-name>earthquakes.password</param-name>
-        <param-value></param-value>
-    </context-param>
-    <context-param>
-        <param-name>db.tcpServer</param-name>
-        <param-value>-tcpAllowOthers</param-value>
-    </context-param>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -70,15 +26,6 @@
         <session-timeout>60</session-timeout>
     </session-config>
 
-    <filter>
-        <filter-name>org.springframework.security.filterChainProxy</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>org.springframework.security.filterChainProxy</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -86,6 +33,12 @@
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
+
+    <!-- Spring servlet -->
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    </servlet>
 
     <!-- Jersey servlet -->
     <servlet>
@@ -110,6 +63,11 @@
 
         <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>jersey2</servlet-name>
