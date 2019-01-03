@@ -9,8 +9,6 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * Dummy implementation of UserDAO
- *
- * @author akuehnel
  */
 public class MonsaiUserDao implements UserDAO {
 

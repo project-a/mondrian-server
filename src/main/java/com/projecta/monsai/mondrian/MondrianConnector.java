@@ -24,6 +24,7 @@ import com.projecta.monsai.config.Config;
 import com.projecta.monsai.saiku.MonsaiConnectionManager;
 import com.projecta.monsai.saiku.OlapConnectionProxy;
 import com.projecta.monsai.sql.SqlProxy;
+import com.projecta.monsai.sql.SqlRewriter;
 
 import mondrian.olap.MondrianServer;
 import mondrian.rolap.RolapUtil;
@@ -46,7 +47,7 @@ public class MondrianConnector {
     private static String         dataSourceName;
     private static String         catalogName;
 
-    private static final String JDBC_DRIVERS = "org.postgresql.Driver,nl.cwi.monetdb.jdbc.MonetDriver";
+    private static final String JDBC_DRIVERS = "org.postgresql.Driver";
 
     private static final Logger LOG = Logger.getLogger(MondrianConnector.class);
 
@@ -234,7 +235,7 @@ public class MondrianConnector {
             connectionManager.refreshAllConnections();
             response += "reinitialized saiku connections\n";
 
-            // SqlRewriter.clearCache();
+            SqlRewriter.clearCache();
         }
         catch (Exception e) {
             throw new RuntimeException(e);

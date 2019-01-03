@@ -1,7 +1,7 @@
 package com.projecta.monsai.saiku;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -108,7 +108,7 @@ public class MonsaiSessionService implements ISessionService {
         session = new HashMap<String, Object>();
         session.put("username", StringUtils.defaultIfEmpty(userName, "anonymous"));
         session.put("sessionid", UUID.randomUUID().toString());
-        session.put("roles", new ArrayList<String>());
+        session.put("roles", Collections.emptyList());
 
         // when authorisation url is not set, requests are always authorized
         if (saikuAuthorizationUrl == null) {
@@ -220,7 +220,7 @@ public class MonsaiSessionService implements ISessionService {
         Map<String, Object> session = new HashMap<String, Object>();
         session.put("username",  userName);
         session.put("sessionid", UUID.randomUUID().toString());
-        session.put("roles",     new ArrayList<String>());
+        session.put("roles",     Collections.emptyList());
         sessionCache.put(userName, session);
 
         request.getSession().setAttribute(SAIKU_SESSION, session);

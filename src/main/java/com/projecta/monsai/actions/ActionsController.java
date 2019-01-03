@@ -9,8 +9,6 @@ import com.projecta.monsai.mondrian.MondrianConnector;
 
 /**
  * Controller class for the API used by the DWH
- *
- * @author akuehnel
  */
 @Controller
 public class ActionsController {

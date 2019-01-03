@@ -19,8 +19,6 @@ import org.postgresql.util.PGobject;
 
 /**
  * A dynamic proxy that intercepts JDBC methods calls
- *
- * @author akuehnel
  */
 public class SqlProxy {
 
@@ -121,13 +119,10 @@ public class SqlProxy {
 
                 // create a proxy for every Statement object
                 if (result instanceof Statement) {
-                    if (result instanceof CallableStatement) {
-                        return createProxy(new StatementProxy((Statement) result), CallableStatement.class);
-                    }
-                    if (result instanceof PreparedStatement) {
-                        return createProxy(new StatementProxy((Statement) result), PreparedStatement.class);
-                    }
-                    return createProxy(new StatementProxy((Statement) result), Statement.class);
+                    Class<?> interfaceClass = result instanceof CallableStatement ? CallableStatement.class
+                                            : result instanceof PreparedStatement ? PreparedStatement.class
+                                            : Statement.class;
+                    return createProxy(new StatementProxy(connection, (Statement) result), interfaceClass);
                 }
                 return result;
             }
@@ -146,9 +141,11 @@ public class SqlProxy {
      */
     public static class StatementProxy implements InvocationHandler {
 
+        Connection connection;
         Statement statement;
 
-        public StatementProxy(Statement statement) {
+        public StatementProxy(Connection connection, Statement statement) {
+            this.connection = connection;
             this.statement = statement;
         }
 
@@ -156,6 +153,11 @@ public class SqlProxy {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
             try {
+                if (method.getName().equals("executeQuery")) {
+                    SqlRewriter rewriter = new SqlRewriter();
+                    args[0] = rewriter.rewrite((String) args[0], connection);
+                }
+
                 Object result = method.invoke(statement, args);
 
                 // create a proxy for every ResultSet object

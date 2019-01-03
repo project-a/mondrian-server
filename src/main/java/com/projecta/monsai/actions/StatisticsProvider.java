@@ -15,8 +15,6 @@ import mondrian.util.Pair;
 
 /**
  * Retrieves some statistics, like memory usage and currently running queries
- *
- * @author akuehnel
  */
 @Component
 public class StatisticsProvider {

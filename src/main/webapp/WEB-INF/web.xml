@@ -64,6 +64,16 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- XMLA servlet -->
+    <servlet>
+        <servlet-name>XmlaServlet</servlet-name>
+        <servlet-class>com.projecta.monsai.xmla.XmlaServlet</servlet-class>
+        <init-param>
+            <param-name>CharacterEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>spring</servlet-name>
         <url-pattern>/</url-pattern>
@@ -72,6 +82,16 @@
     <servlet-mapping>
         <servlet-name>jersey2</servlet-name>
         <url-pattern>/saiku/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>XmlaServlet</servlet-name>
+        <url-pattern>/xmla</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>XmlaServlet</servlet-name>
+        <url-pattern>/excel/*</url-pattern>
     </servlet-mapping>
 
     <absolute-ordering />

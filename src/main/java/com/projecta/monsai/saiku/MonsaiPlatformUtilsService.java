@@ -16,7 +16,7 @@ public class MonsaiPlatformUtilsService extends PlatformUtilsService {
 
     @PostConstruct
     public void init() {
-        setPath( servletContext.getRealPath("/js/saiku/plugins/"));
+        setPath(servletContext.getRealPath("/js/saiku/plugins/"));
     }
 
 }
