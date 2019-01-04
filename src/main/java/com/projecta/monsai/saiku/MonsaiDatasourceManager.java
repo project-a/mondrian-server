@@ -336,18 +336,13 @@ public class MonsaiDatasourceManager implements IDatasourceManager {
         List<IRepositoryObject> files = new ArrayList<>();
         String normalizedPath = normalizePath(path);
 
-        // add synthetic root folder
-        if (normalizedPath.isEmpty()) {
-            files.add(new RepositoryFolderObject("/", "#", "/", ACCESS_READ, Collections.emptyList()));
-        }
-
         // retrieve directory contents
         for (File file : new File(storageDir, normalizedPath).listFiles()) {
             if (file.isHidden()) {
                 continue;
             }
 
-            String filePath = normalizedPath + "/" + file.getName();
+            String filePath = normalizedPath + (normalizedPath.isEmpty() ? "" : "/") + file.getName();
 
             if (file.isDirectory()) {
                 List<IRepositoryObject> directoryContents = listFiles(filePath, fileTypes);
@@ -365,7 +360,6 @@ public class MonsaiDatasourceManager implements IDatasourceManager {
 
         // sort
         Collections.sort(files, new Comparator<IRepositoryObject>() {
-
             @Override
             public int compare(IRepositoryObject o1, IRepositoryObject o2) {
                 if (o1.getType().equals(IRepositoryObject.Type.FOLDER) && o2.getType().equals(IRepositoryObject.Type.FILE))
@@ -373,9 +367,7 @@ public class MonsaiDatasourceManager implements IDatasourceManager {
                 if (o1.getType().equals(IRepositoryObject.Type.FILE) && o2.getType().equals(IRepositoryObject.Type.FOLDER))
                     return 1;
                 return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-
             }
-
         });
 
         return files;

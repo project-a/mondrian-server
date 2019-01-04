@@ -14,8 +14,8 @@ sourceCompatibility = 1.8
 ext.saikuReleaseTag = 'tag-3.16'
 
 // Mondrian Version
-ext.mondrianReleaseTag = '8.3.0.0-RC'
-ext.mondrianVersion = '8.3.0.0-SNAPSHOT'
+ext.mondrianReleaseTag = '8.2.0.1-R'
+ext.mondrianVersion = '8.2.0.0-SNAPSHOT'
 
 
 /*
@@ -86,6 +86,8 @@ task mergeSaiku(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
             from 'src/main/webapp'
             into 'tmp/main/webapp'
         }
+
+        delete 'tmp/main/webapp/js/saiku/plugins/I18n/po'
     }
 }
 compileJava.dependsOn mergeSaiku

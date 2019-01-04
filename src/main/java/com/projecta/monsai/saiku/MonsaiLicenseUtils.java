@@ -1,12 +1,13 @@
 package com.projecta.monsai.saiku;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import javax.jcr.RepositoryException;
 
 import org.saiku.service.datasource.IDatasourceManager;
 import org.saiku.service.license.ILicenseUtils;
+
+import com.google.common.collect.ImmutableMap;
 
 import bi.meteorite.license.LicenseException;
 import bi.meteorite.license.SaikuLicense;
@@ -35,7 +36,7 @@ public class MonsaiLicenseUtils implements ILicenseUtils {
 
     @Override
     public Object getLicense() throws IOException, ClassNotFoundException, RepositoryException {
-        return new HashMap<>();
+        return ImmutableMap.of("licenseType", "");
     }
 
     @Override
