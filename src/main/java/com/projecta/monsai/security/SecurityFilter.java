@@ -58,7 +58,7 @@ public class SecurityFilter implements Filter {
 
         // dont do anything for general urls
         String url = request.getRequestURI();
-        if (url.equals("/xmla") || url.equals("/flush-caches") || url.startsWith("/actions/")) {
+        if (url.equals("/xmla") || url.equals("/flush-caches") || url.equals("/stats") || url.startsWith("/actions/")) {
             chain.doFilter(servletRequest, servletResponse);
             return;
         }

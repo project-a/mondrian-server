@@ -21,7 +21,9 @@ public class XmlaConnectionFactory implements XmlaHandler.ConnectionFactory {
     public OlapConnection getConnection(String catalog, String schema, String roleName, Properties props)
             throws SQLException {
 
-        return MondrianConnector.getMondrianServer().getConnection(catalog, schema, roleName, props);
+        OlapConnection connection = MondrianConnector.getMondrianServer().getConnection(catalog, schema, roleName, props);
+        MondrianConnector.applyPermissions(connection);
+        return connection;
     }
 
     @Override

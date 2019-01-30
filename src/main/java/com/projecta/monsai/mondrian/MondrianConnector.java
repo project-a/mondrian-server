@@ -19,14 +19,18 @@ import org.jdom.output.XMLOutputter;
 import org.olap4j.OlapConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import com.projecta.monsai.config.Config;
 import com.projecta.monsai.saiku.MonsaiConnectionManager;
 import com.projecta.monsai.saiku.OlapConnectionProxy;
+import com.projecta.monsai.security.CubeAccess;
 import com.projecta.monsai.sql.SqlProxy;
 import com.projecta.monsai.sql.SqlRewriter;
 
 import mondrian.olap.MondrianServer;
+import mondrian.rolap.RolapConnection;
 import mondrian.rolap.RolapUtil;
 import mondrian.server.StringRepositoryContentFinder;
 import mondrian.spi.impl.IdentityCatalogLocator;
@@ -208,11 +212,31 @@ public class MondrianConnector {
      */
     public static OlapConnection getOlapConnection() {
         try {
-            return server.getConnection(dataSourceName, catalogName, null);
+            OlapConnection connection = server.getConnection(dataSourceName, catalogName, null);
+            applyPermissions(connection);
+            return connection;
         }
         catch (SQLException e) {
             LOG.error("Failed to get olap connection", e);
             return null;
+        }
+    }
+
+
+    /**
+     * Applies the permissions for the current request to the mondrian connection
+     */
+    public static void applyPermissions(OlapConnection connection) {
+        try {
+            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+            CubeAccess cubeAccess = (CubeAccess) requestAttributes.getAttribute(
+                    CubeAccess.REQUEST_ATTR, RequestAttributes.SCOPE_REQUEST);
+
+            RolapConnection rolapConnection = connection.unwrap(RolapConnection.class);
+            rolapConnection.setRole(new CubeAccessRole(cubeAccess));
+        }
+        catch (Throwable e) {
+            LOG.error("Error in applyPermissions: " + e.getMessage(), e);
         }
     }
 

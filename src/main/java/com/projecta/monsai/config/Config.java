@@ -10,14 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.MapPropertySource;
-import org.springframework.core.env.MutablePropertySources;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 
@@ -27,7 +24,7 @@ import org.springframework.web.context.ServletContextAware;
  * system property or the context parameter with the name "cubes.config"
  */
 @Component
-public class Config extends PropertySourcesPlaceholderConfigurer implements ServletContextAware {
+public class Config implements ServletContextAware {
 
     private ServletContext servletContext;
 
@@ -37,8 +34,8 @@ public class Config extends PropertySourcesPlaceholderConfigurer implements Serv
     /**
      * Loads the properties on spring intialisation
      */
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    @PostConstruct
+    public void init() throws BeansException {
 
         // determine location of configuration file
         String configFileName = System.getProperty("cubes.config");
@@ -62,15 +59,7 @@ public class Config extends PropertySourcesPlaceholderConfigurer implements Serv
         for (Entry<Object, Object> entry : props.entrySet()) {
             properties.put((String) entry.getKey(), (String) entry.getValue());
         }
-
-        // make properties available in spring expressions
-        MutablePropertySources propertySources = new MutablePropertySources();
-        propertySources.addFirst(new MapPropertySource("cubesProperties", (Map) properties));
-        setPropertySources(propertySources);
-        setIgnoreUnresolvablePlaceholders(true);
     }
-
-
 
 
     /**

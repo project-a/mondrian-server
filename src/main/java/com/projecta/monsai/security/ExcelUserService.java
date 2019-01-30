@@ -3,8 +3,6 @@ package com.projecta.monsai.security;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
@@ -31,10 +29,10 @@ import mondrian.util.Base64;
 @Component
 public class ExcelUserService {
 
-    private Cache<String, Boolean> authorizationCache;
-    private String                 excelAuthorizationUrl;
-    private String                 excelUsername;
-    private String                 excelPassword;
+    private Cache<String, CubeAccess> authorizationCache;
+    private String excelAuthorizationUrl;
+    private String excelUsername;
+    private String excelPassword;
 
     @Autowired private Config config;
 
@@ -98,7 +96,9 @@ public class ExcelUserService {
         }
 
         // check if we have a cached authentication
-        if (authorizationCache.getIfPresent(userName + ":" + password) != null) {
+        CubeAccess cubeAccess = authorizationCache.getIfPresent(userName + ":" + password);
+        if (cubeAccess != null) {
+            request.setAttribute(CubeAccess.REQUEST_ATTR, cubeAccess);
             return true;
         }
 
@@ -110,14 +110,15 @@ public class ExcelUserService {
         }
         else {
             // call the authorization url
-            Map<String, Object> response = doAuthorizationRequest(userName, password);
-            if (response == null || !Objects.equals(response.get("allowed"), Boolean.TRUE)) {
+            cubeAccess = doAuthorizationRequest(userName, password);
+            if (cubeAccess == null || !cubeAccess.isAllowed()) {
                 LOG.info("Wrong username/password, access denied");
                 return false;
             }
         }
 
-        authorizationCache.put(userName + ":" + password, true);
+        authorizationCache.put(userName + ":" + password, cubeAccess);
+        request.setAttribute(CubeAccess.REQUEST_ATTR, cubeAccess);
         return true;
     }
 
@@ -125,7 +126,7 @@ public class ExcelUserService {
     /**
      * Calls the configured authorization URL and parses the response as JSON
      */
-    private Map<String, Object> doAuthorizationRequest(String userName, String password) {
+    private CubeAccess doAuthorizationRequest(String userName, String password) {
 
         try {
             Request request = Request.Post(excelAuthorizationUrl)
@@ -136,7 +137,7 @@ public class ExcelUserService {
 
             // parse the JSON repsponse
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(responseString, Map.class);
+            return objectMapper.readValue(responseString, CubeAccess.class);
         }
         catch (Throwable e) {
             // any error means that the authorization failed

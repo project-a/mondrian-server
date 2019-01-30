@@ -4,7 +4,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.projecta.monsai.config.Config;
+import com.projecta.monsai.security.CubeAccess;
 
 /**
  * Implementation of the Saiku {@link ISessionService} that uses an external URL
@@ -100,6 +100,7 @@ public class MonsaiSessionService implements ISessionService {
         if (!refresh) {
             session = sessionCache.getIfPresent(userName);
             if (session != null) {
+                request.setAttribute(CubeAccess.REQUEST_ATTR, session.get(CubeAccess.REQUEST_ATTR));
                 return session;
             }
         }
@@ -122,15 +123,15 @@ public class MonsaiSessionService implements ISessionService {
         }
 
         // call the authorization url
-        Map<String, Object> authResponse = doAuthorizationRequest(userName);
-        if (authResponse == null || authResponse.get("allowed") == null) {
+        CubeAccess cubeAccess = doAuthorizationRequest(userName);
+        if (cubeAccess == null || cubeAccess.getAllowed() == null) {
             LOG.info("No valid authorization response, access denied to " + userName);
             sessionCache.invalidate(userName);
             return null;
         }
 
-        if (!Objects.equals(authResponse.get("allowed"), Boolean.TRUE)) {
-
+        if (!cubeAccess.isAllowed()) {
+            // handle access denied
             LOG.info("Access denied to " + userName);
             sessionCache.invalidate(userName);
 
@@ -151,6 +152,9 @@ public class MonsaiSessionService implements ISessionService {
             return null;
         }
 
+        // store the permissions and cache the session
+        request.setAttribute(CubeAccess.REQUEST_ATTR, cubeAccess);
+        session.put(CubeAccess.REQUEST_ATTR, cubeAccess);
         sessionCache.put(userName, session);
         return session;
     }
@@ -159,7 +163,7 @@ public class MonsaiSessionService implements ISessionService {
     /**
      * Calls the configured authorization URL and parses the response as JSON
      */
-    private Map<String, Object> doAuthorizationRequest(String userName) {
+    private CubeAccess doAuthorizationRequest(String userName) {
 
         try {
             // call the configured url
@@ -171,7 +175,7 @@ public class MonsaiSessionService implements ISessionService {
 
             // parse the JSON repsponse
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(responseString, Map.class);
+            return objectMapper.readValue(responseString, CubeAccess.class);
         }
         catch (Throwable e) {
             // any error means that the authorization failed
