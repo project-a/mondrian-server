@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.io.IOException;
 
@@ -15,7 +15,7 @@ import bi.meteorite.license.SaikuLicense;
 /**
  * Dummy implementation of ILicenseUtils
  */
-public class MonsaiLicenseUtils implements ILicenseUtils {
+public class SaikuLicenseUtils implements ILicenseUtils {
 
     @Override
     public IDatasourceManager getRepositoryDatasourceManager() {

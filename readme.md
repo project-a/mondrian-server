@@ -9,26 +9,25 @@ Build Process
 
 - You need to have gradle installed (use `brew install gradle`)
 - then just run gradle in the project root directory
-- this downloads all required ressources and builds monsai.war
+- this downloads all required ressources and builds mondrian-server.war
 
 
 Installation
 ------------
 
-- monsai.war must be installed in a Apache Tomcat in the root path
-- the context parameter `cubes.config` must be provided and point to the configuration file
-- see `cubes-hosts-template.xml` as an example
+- mondrian-server.war must be installed in a Apache Tomcat in the root path
+- the context parameter `mondrian-server.properties` must be provided and contain a path to the configuration file
 
 
 Configuration
 -------------
 
 The configuration file is a properties file that contains all availaible configuration parameters.
-See `cubes.properties.example` as an example.
+See `mondrian-properties.properties.example` as an example.
 
 The following configuration parameters can be set:
 
-- `cubesBaseUrl`: Public base url of the Tomcat where monsai.war is installed
+- `baseUrl`: Public base url of the Tomcat where mondrian-server.war is installed
 - `dataSourceName`: Name for the datasource (optional, default is "Cubes")
 - `catalogName`: Name for the catalog (optional, default is "dwh")
 
@@ -66,8 +65,6 @@ The following URLs are provided as an external API:
 - `/xmla`: API endpoint for MDX queries
 - `/excel`: API endpoint for MDX queries from Excel integration
 - `/flush-caches`: Clears all mondrian caches
-- `/actions/check-stored-queries`: Checks if all stored user queries can still be executed
-                               and returns a JSON with error information
 
 
 Authentication

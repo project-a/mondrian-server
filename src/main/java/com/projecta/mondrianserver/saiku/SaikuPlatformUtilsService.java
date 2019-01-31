@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Implementation of PlatformUtilsService that uses the current webapp root
  */
-public class MonsaiPlatformUtilsService extends PlatformUtilsService {
+public class SaikuPlatformUtilsService extends PlatformUtilsService {
 
     @Autowired ServletContext servletContext;
 

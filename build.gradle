@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 
-defaultTasks 'clean', 'cleanEclipse', 'eclipse', 'mergeSaiku', 'war'
+defaultTasks 'clean', 'cleanEclipse', 'eclipse', 'mergeSources', 'war'
 
 /*
  * Version configuration
@@ -15,7 +15,7 @@ ext.saikuReleaseTag = 'tag-3.16'
 
 // Mondrian Version
 ext.mondrianReleaseTag = '8.2.0.1-R'
-ext.mondrianVersion = '8.2.0.0-SNAPSHOT'
+ext.mondrianVersion = '8.3.0.0-SNAPSHOT'
 
 
 /*
@@ -41,7 +41,7 @@ task downloadMondrian(type: Exec) {
 /**
  * Copy relevant parts of the Saiku source code to a temporary directory
  */
-task mergeSaiku(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
+task mergeSources(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
 
     outputs.upToDateWhen { false }
     doLast {
@@ -90,7 +90,7 @@ task mergeSaiku(dependsOn: [downloadSaiku, downloadSaikuQuery]) {
         delete 'tmp/main/webapp/js/saiku/plugins/I18n/po'
     }
 }
-compileJava.dependsOn mergeSaiku
+compileJava.dependsOn mergeSources
 
 
 /**
@@ -202,7 +202,7 @@ configurations.all {
  * Build the jar file
  */
 war {
-    archiveName 'monsai.war'
+    archiveName 'mondrian-server.war'
     destinationDir file('.')
 
     from 'tmp/main/webapp'

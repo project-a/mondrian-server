@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.io.OutputStream;
 import java.util.Collections;
@@ -23,14 +23,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.projecta.monsai.config.Config;
-import com.projecta.monsai.security.CubeAccess;
+import com.projecta.mondrianserver.config.Config;
+import com.projecta.mondrianserver.security.CubeAccess;
 
 /**
  * Implementation of the Saiku {@link ISessionService} that uses an external URL
  * to allow or deny requests to Saiku.
  */
-public class MonsaiSessionService implements ISessionService {
+public class SaikuSessionService implements ISessionService {
 
     private Cache<String, Map<String, Object>> sessionCache;
     private String saikuAuthorizationUrl;
@@ -46,7 +46,7 @@ public class MonsaiSessionService implements ISessionService {
     private static final int CACHE_TIME_MINUTES     = 30;
     private static final int REQUEST_TIMEOUT_MILLIS = 30000;
 
-    private static final Logger LOG = Logger.getLogger(MonsaiSessionService.class);
+    private static final Logger LOG = Logger.getLogger(SaikuSessionService.class);
 
 
     @PostConstruct

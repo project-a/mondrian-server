@@ -1,4 +1,4 @@
-package com.projecta.monsai.config;
+package com.projecta.mondrianserver.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import org.springframework.web.context.ServletContextAware;
 
 /**
  * Utility class that provides the configuration information by reading the
- * cubes.properties file, the path to which must either be provided as the
+ * mondrian-server.properties file, the path to which must either be provided as the
  * system property or the context parameter with the name "cubes.config"
  */
 @Component
@@ -38,12 +38,12 @@ public class Config implements ServletContextAware {
     public void init() throws BeansException {
 
         // determine location of configuration file
-        String configFileName = System.getProperty("cubes.config");
+        String configFileName = System.getProperty("mondrian-server.properties");
         if (StringUtils.isEmpty(configFileName)) {
-            configFileName = servletContext.getInitParameter("cubes.config");
+            configFileName = servletContext.getInitParameter("mondrian-server.properties");
         }
         if (StringUtils.isEmpty(configFileName)) {
-            throw new RuntimeException("Please set \"cubes.config\" as a system property or a context parameter");
+            throw new RuntimeException("Please set \"mondrian-server.properties\" as a system property or a context parameter");
         }
 
         // load configuration file

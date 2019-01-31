@@ -1,4 +1,4 @@
-package com.projecta.monsai.sql;
+package com.projecta.mondrianserver.sql;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;

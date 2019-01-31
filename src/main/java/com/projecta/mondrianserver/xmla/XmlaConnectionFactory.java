@@ -1,4 +1,4 @@
-package com.projecta.monsai.xmla;
+package com.projecta.mondrianserver.xmla;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Properties;
 
 import org.olap4j.OlapConnection;
 
-import com.projecta.monsai.mondrian.MondrianConnector;
+import com.projecta.mondrianserver.mondrian.MondrianConnector;
 
 import mondrian.xmla.XmlaHandler;
 

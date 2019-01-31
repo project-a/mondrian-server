@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,13 +33,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.projecta.monsai.config.Config;
+import com.projecta.mondrianserver.config.Config;
 
 /**
  * Stripped-down implementation of IDatasourceManager that avoids the use of any
  * external repository and stores saved queries in the configured directory
  */
-public class MonsaiDatasourceManager implements IDatasourceManager {
+public class SaikuDatasourceManager implements IDatasourceManager {
 
     @Autowired private Config config;
 

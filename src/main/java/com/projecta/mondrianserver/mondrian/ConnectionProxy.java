@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.mondrian;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -8,19 +8,17 @@ import java.util.WeakHashMap;
 
 import org.olap4j.OlapConnection;
 
-import com.projecta.monsai.mondrian.MondrianConnector;
-
 /**
  * Dynamic proxy for connections to prevent cacheing of connections by Saiku
  */
-public class OlapConnectionProxy implements InvocationHandler {
+public class ConnectionProxy implements InvocationHandler {
 
     private OlapConnection connection;
 
-    private static Map<OlapConnectionProxy, Boolean> instances = new WeakHashMap<OlapConnectionProxy, Boolean>();
+    private static Map<ConnectionProxy, Boolean> instances = new WeakHashMap<ConnectionProxy, Boolean>();
 
 
-    private OlapConnectionProxy() {
+    private ConnectionProxy() {
     }
 
 
@@ -29,8 +27,8 @@ public class OlapConnectionProxy implements InvocationHandler {
      */
     public static OlapConnection getProxyInstance() {
 
-        OlapConnectionProxy proxy = new OlapConnectionProxy();
-        synchronized (OlapConnectionProxy.class) {
+        ConnectionProxy proxy = new ConnectionProxy();
+        synchronized (ConnectionProxy.class) {
             instances.put(proxy, true);
         }
 
@@ -64,7 +62,7 @@ public class OlapConnectionProxy implements InvocationHandler {
      */
     public static synchronized void closeAllConnections() {
 
-        for (OlapConnectionProxy proxy : instances.keySet()) {
+        for (ConnectionProxy proxy : instances.keySet()) {
             if (proxy != null) {
                 synchronized (proxy) {
                     try {

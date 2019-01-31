@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.util.Collection;
 
@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * Dummy implementation of UserDAO
  */
-public class MonsaiUserDao implements UserDAO {
+public class SaikuUserDao implements UserDAO {
 
     public static final SaikuUser ADMIN_USER = new SaikuUser();
 

@@ -22,12 +22,12 @@
     <bean id="h2database" class="org.saiku.database.Database"/>
 
     <!-- Overwrite several services with own implementation -->
-    <bean id="repositoryDsManager" class="com.projecta.monsai.saiku.MonsaiDatasourceManager" />
-    <bean id="sessionService" class="com.projecta.monsai.saiku.MonsaiSessionService"/>
-    <bean id="licenseUtils" class="com.projecta.monsai.saiku.MonsaiLicenseUtils"/>
-    <bean id="userDAO" class="com.projecta.monsai.saiku.MonsaiUserDao"/>
+    <bean id="repositoryDsManager" class="com.projecta.mondrianserver.saiku.SaikuDatasourceManager" />
+    <bean id="sessionService" class="com.projecta.mondrianserver.saiku.SaikuSessionService"/>
+    <bean id="licenseUtils" class="com.projecta.mondrianserver.saiku.SaikuLicenseUtils"/>
+    <bean id="userDAO" class="com.projecta.mondrianserver.saiku.SaikuUserDao"/>
 
-    <bean id="userServiceBean" class="com.projecta.monsai.saiku.MonsaiUserService">
+    <bean id="userServiceBean" class="com.projecta.mondrianserver.saiku.SaikuUserService">
         <property name="jdbcUserDAO" ref="userDAO"/>
         <property name="datasourceService" ref="datasourceServiceBean"/>
         <property name="iDatasourceManager" ref="repositoryDsManager"/>
@@ -39,11 +39,11 @@
         <property name="sessionService" ref="sessionService"/>
     </bean>
 
-    <bean id="platformBean" class="com.projecta.monsai.saiku.MonsaiPlatformUtilsService">
+    <bean id="platformBean" class="com.projecta.mondrianserver.saiku.SaikuPlatformUtilsService">
         <property name="path" value=""/>
     </bean>
 
-    <bean id="connectionManager" class="com.projecta.monsai.saiku.MonsaiConnectionManager"
+    <bean id="connectionManager" class="com.projecta.mondrianserver.saiku.SaikuConnectionManager"
         init-method="init" destroy-method="destroy" depends-on="mondrianVFS">
         <property name="dataSourceManager" ref="repositoryDsManager"/>
         <property name="sessionService" ref="sessionService"/>

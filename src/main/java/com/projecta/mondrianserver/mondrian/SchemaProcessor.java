@@ -1,5 +1,5 @@
 
-package com.projecta.monsai.mondrian;
+package com.projecta.mondrianserver.mondrian;
 
 import java.io.StringWriter;
 
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
-import com.projecta.monsai.config.Config;
+import com.projecta.mondrianserver.config.Config;
 
 import mondrian.olap.Util;
 import mondrian.spi.DynamicSchemaProcessor;

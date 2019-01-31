@@ -1,4 +1,4 @@
-package com.projecta.monsai.security;
+package com.projecta.mondrianserver.security;
 
 import java.util.Set;
 

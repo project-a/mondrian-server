@@ -1,4 +1,4 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Patched version of UserService that does not use a hardcoded reference to JdbcUserDAO
  */
-public class MonsaiUserService extends UserService {
+public class SaikuUserService extends UserService {
 
     private UserDAO uDAO;
 
@@ -25,7 +25,7 @@ public class MonsaiUserService extends UserService {
     private DatasourceService datasourceService;
     private ISessionService sessionService;
     private List<String> adminRoles;
-    private static final Logger log = LoggerFactory.getLogger(MonsaiUserService.class);
+    private static final Logger log = LoggerFactory.getLogger(SaikuUserService.class);
     private static final long serialVersionUID = 1L;
 
     @Override

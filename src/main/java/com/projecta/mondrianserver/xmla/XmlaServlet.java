@@ -1,4 +1,4 @@
-package com.projecta.monsai.xmla;
+package com.projecta.mondrianserver.xmla;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;

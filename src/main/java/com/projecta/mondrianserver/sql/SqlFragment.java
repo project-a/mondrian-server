@@ -1,4 +1,4 @@
-package com.projecta.monsai.sql;
+package com.projecta.mondrianserver.sql;
 
 /**
  * Bean class for a parsed fragment of an SQL query

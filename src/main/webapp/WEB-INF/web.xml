@@ -9,7 +9,7 @@
 -->
 <web-app metadata-complete="true">
 
-    <display-name>monsai</display-name>
+    <display-name>mondrian-server</display-name>
 
     <!-- General configuration -->
     <context-param>
@@ -37,7 +37,7 @@
     <!-- Security filter -->
     <filter>
         <filter-name>SecurityFilter</filter-name>
-        <filter-class>com.projecta.monsai.security.SecurityFilter</filter-class>
+        <filter-class>com.projecta.mondrianserver.security.SecurityFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>SecurityFilter</filter-name>
@@ -77,7 +77,7 @@
     <!-- XMLA servlet -->
     <servlet>
         <servlet-name>XmlaServlet</servlet-name>
-        <servlet-class>com.projecta.monsai.xmla.XmlaServlet</servlet-class>
+        <servlet-class>com.projecta.mondrianserver.xmla.XmlaServlet</servlet-class>
         <init-param>
             <param-name>CharacterEncoding</param-name>
             <param-value>UTF-8</param-value>

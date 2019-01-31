@@ -1,4 +1,4 @@
-package com.projecta.monsai.sql;
+package com.projecta.mondrianserver.sql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.projecta.monsai.sql.SqlFragment.FragmentType;
+import com.projecta.mondrianserver.sql.SqlFragment.FragmentType;
 
 import mondrian.rolap.RolapUtil;
 import mondrian.util.Pair;

@@ -1,0 +1,55 @@
+#
+# Configuration of the Monsai application
+#
+
+
+# public base url of cubes application (used in discovery methods of XMLA interface)
+cubesBaseUrl = http://dwh-us.example.com/
+
+# Name of the datasource
+dataSourceName = Cubes
+
+# Name of the catalog
+catalogName = dwh
+
+# connection to postgresql dwh database
+databaseUrl      = jdbc:postgresql://localhost/dwh
+databaseUser     = user
+databasePassword =
+
+# absolute path to mondrian schema xml file (part of project Dwh component)
+mondrianSchemaFile = /path/to/yuz/project/Zed/application/components/Xxx/Dwh/mondrian-schema.xml
+
+# absolute path to mondrian.properties xml file (if present)
+mondrianPropertiesFile =
+
+# directory where saiku user queries are stored
+saikuStorageDir =
+
+# URL that will be called to check whether a given user has access rights to Saiku
+saikuAuthorizationUrl =
+
+# A fixed user name and password for simple Saiku authentication
+saikuUsername =
+saikuPassword =
+
+# URL that will be called to check whether a given user has access rights to Excel
+excelAuthorizationUrl =
+
+# A fixed user name and password for simple Excel authentication
+excelUsername =
+excelPassword =
+
+# enable/disable logging of MDX, generated SQL queries or all mondrian output
+logMdx = false
+logSql = false
+logAll = false
+
+# the locale that is used for formatting numbers (1.234,56 vs. 1,234.56)
+locale = de_DE
+
+# the currency symbol that will be used to display currencies plus the string to match for replacing currency symbols
+currencyCode = EUR
+currencyPlaceholder = @
+
+

@@ -1,4 +1,4 @@
-package com.projecta.monsai.security;
+package com.projecta.mondrianserver.security;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.projecta.monsai.config.Config;
+import com.projecta.mondrianserver.config.Config;
 
 import mondrian.util.Base64;
 

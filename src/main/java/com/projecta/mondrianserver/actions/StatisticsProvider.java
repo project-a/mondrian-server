@@ -1,4 +1,4 @@
-package com.projecta.monsai.actions;
+package com.projecta.mondrianserver.actions;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.concurrent.FutureTask;
 
 import org.springframework.stereotype.Component;
 
-import com.projecta.monsai.mondrian.MondrianConnector;
+import com.projecta.mondrianserver.mondrian.MondrianConnector;
 
 import mondrian.olap.Result;
 import mondrian.rolap.RolapResultShepherd;

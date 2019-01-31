@@ -1,4 +1,4 @@
-package com.projecta.monsai.security;
+package com.projecta.mondrianserver.security;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.projecta.monsai.saiku.MonsaiSessionService;
+import com.projecta.mondrianserver.saiku.SaikuSessionService;
 
 /**
  * Filter that checks every web request and applies different ACL mechanisms,
@@ -26,7 +26,7 @@ import com.projecta.monsai.saiku.MonsaiSessionService;
  */
 public class SecurityFilter implements Filter {
 
-    private MonsaiSessionService sessionService;
+    private SaikuSessionService sessionService;
     private ExcelUserService     excelUserService;
 
 
@@ -37,7 +37,7 @@ public class SecurityFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(filterConfig.getServletContext());
-        sessionService = applicationContext.getBean(MonsaiSessionService.class);
+        sessionService = applicationContext.getBean(SaikuSessionService.class);
         excelUserService = applicationContext.getBean(ExcelUserService.class);
     }
 

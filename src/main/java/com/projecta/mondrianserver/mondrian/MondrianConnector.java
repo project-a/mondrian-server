@@ -1,4 +1,4 @@
-package com.projecta.monsai.mondrian;
+package com.projecta.mondrianserver.mondrian;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
-import com.projecta.monsai.config.Config;
-import com.projecta.monsai.saiku.MonsaiConnectionManager;
-import com.projecta.monsai.saiku.OlapConnectionProxy;
-import com.projecta.monsai.security.CubeAccess;
-import com.projecta.monsai.sql.SqlProxy;
-import com.projecta.monsai.sql.SqlRewriter;
+import com.projecta.mondrianserver.config.Config;
+import com.projecta.mondrianserver.saiku.SaikuConnectionManager;
+import com.projecta.mondrianserver.security.CubeAccess;
+import com.projecta.mondrianserver.security.CubeAccessRole;
+import com.projecta.mondrianserver.sql.SqlProxy;
+import com.projecta.mondrianserver.sql.SqlRewriter;
 
 import mondrian.olap.MondrianServer;
 import mondrian.rolap.RolapConnection;
@@ -45,7 +45,7 @@ public class MondrianConnector {
 
     @Autowired private Config                  config;
     @Autowired private SchemaProcessor         schemaProcessor;
-    @Autowired private MonsaiConnectionManager connectionManager;
+    @Autowired private SaikuConnectionManager connectionManager;
 
     private static MondrianServer server;
     private static String         dataSourceName;
@@ -81,8 +81,8 @@ public class MondrianConnector {
         // read config values
         dataSourceName = config.getProperty("dataSourceName", "Cubes");
         catalogName    = config.getProperty("catalogName", "dwh");
-        String cubesBaseUrl       = config.getRequiredProperty("cubesBaseUrl");
-        String locale             = config.getRequiredProperty("locale");
+        String baseUrl = config.getProperty("baseUrl", "");
+        String locale  = config.getRequiredProperty("locale");
         String mondrianSchemaFile = config.getRequiredProperty("mondrianSchemaFile");
 
         // read database connection parameters
@@ -103,7 +103,7 @@ public class MondrianConnector {
 
         dataSource.addContent(new Element("DataSourceName").setText(dataSourceName));
         dataSource.addContent(new Element("DataSourceDescription").setText(dataSourceName + " Mondrian DWH server"));
-        dataSource.addContent(new Element("URL").setText(cubesBaseUrl + "/xmla"));
+        dataSource.addContent(new Element("URL").setText(baseUrl + "/xmla"));
         dataSource.addContent(new Element("DataSourceInfo").setText(
                   "Provider=mondrian; " + "Locale=" + locale + "; "
                 + "DynamicSchemaProcessor=" + SchemaProcessor.class.getName() + "; "
@@ -255,7 +255,7 @@ public class MondrianConnector {
             connectMondrianServer();
             response += "reinitialized mondrian server\n";
 
-            OlapConnectionProxy.closeAllConnections();
+            ConnectionProxy.closeAllConnections();
             connectionManager.refreshAllConnections();
             response += "reinitialized saiku connections\n";
 

@@ -1,6 +1,4 @@
-package com.projecta.monsai.mondrian;
-
-import com.projecta.monsai.security.CubeAccess;
+package com.projecta.mondrianserver.security;
 
 import mondrian.olap.Access;
 import mondrian.olap.Cube;

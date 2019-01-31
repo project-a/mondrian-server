@@ -1,19 +1,21 @@
-package com.projecta.monsai.saiku;
+package com.projecta.mondrianserver.saiku;
 
 import java.util.Properties;
 
 import org.olap4j.OlapConnection;
 import org.saiku.datasources.connection.ISaikuConnection;
 
+import com.projecta.mondrianserver.mondrian.ConnectionProxy;
+
 /**
  * Implementation of {@link ISaikuConnection} that always uses an internal
  * connection.
  */
-public class MonsaiOlapConnection implements ISaikuConnection {
+public class SaikuOlapConnection implements ISaikuConnection {
 
     private String name;
 
-    public MonsaiOlapConnection(String name) {
+    public SaikuOlapConnection(String name) {
         this.name = name;
     }
 
@@ -48,7 +50,7 @@ public class MonsaiOlapConnection implements ISaikuConnection {
 
     @Override
     public OlapConnection getConnection() {
-        return OlapConnectionProxy.getProxyInstance();
+        return ConnectionProxy.getProxyInstance();
     }
 
     @Override
