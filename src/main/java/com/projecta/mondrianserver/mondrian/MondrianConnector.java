@@ -85,10 +85,6 @@ public class MondrianConnector {
 
         // read database connection parameters
         String databaseUrl = config.getProperty("databaseUrl");
-        if (StringUtils.isBlank(databaseUrl)) {
-            databaseUrl = "jdbc:postgresql://" + config.getRequiredProperty("databaseHost") + "/"
-                    + config.getProperty("databaseName");
-        }
 
         // initialize the sql proxy
         @SuppressWarnings( "unused" )
@@ -106,10 +102,7 @@ public class MondrianConnector {
                   "Provider=mondrian; " + "Locale=" + locale + "; "
                 + "DynamicSchemaProcessor=" + SchemaProcessor.class.getName() + "; "
                 + "UseContentChecksum=true; "
-                + "Jdbc=" + databaseUrl + "; "
-                + "JdbcDrivers=" + JDBC_DRIVERS + "; "
-                + "JdbcUser=" + StringUtils.defaultString(config.getProperty("databaseUser")) + ";"
-                + "JdbcPassword=" + StringUtils.defaultString(config.getProperty("databasePassword"))));
+                + "Jdbc=" + databaseUrl));
 
         dataSource.addContent(new Element("ProviderName").setText("Mondrian"));
         dataSource.addContent(new Element("ProviderType").setText("MDP"));

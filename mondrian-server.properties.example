@@ -6,12 +6,11 @@
 # public base url of cubes application (used in discovery methods of XMLA interface)
 cubesBaseUrl = http://dwh-us.example.com/
 
+# JDBC Url for connection to the dwh database
+# For PostgreSQL, see https://jdbc.postgresql.org/documentation/head/connect.html
+databaseUrl      = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
 
 
-# connection to postgresql dwh database
-databaseUrl      = jdbc:postgresql://localhost/dwh
-databaseUser     = user
-databasePassword =
 
 # absolute path to mondrian schema xml file (part of project Dwh component)
 mondrianSchemaFile = /path/to/yuz/project/Zed/application/components/Xxx/Dwh/mondrian-schema.xml
