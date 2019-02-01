@@ -21,7 +21,7 @@ import org.springframework.web.context.ServletContextAware;
 /**
  * Utility class that provides the configuration information by reading the
  * mondrian-server.properties file, the path to which must either be provided as the
- * system property or the context parameter with the name "cubes.config"
+ * system property or the context parameter with the name "mondrian-server.properties"
  */
 @Component
 public class Config implements ServletContextAware {

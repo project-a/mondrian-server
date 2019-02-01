@@ -1,19 +1,18 @@
 #
-# Configuration of the Monsai application
+# Configuration of the Mondrian Server application
 #
 
 
-# public base url of cubes application (used in discovery methods of XMLA interface)
-cubesBaseUrl = http://dwh-us.example.com/
+# public base url of mondrian server application (used in discovery methods of XMLA interface)
+cubesBaseUrl = https://mondrian-server.example.com/
 
 # JDBC Url for connection to the dwh database
 # For PostgreSQL, see https://jdbc.postgresql.org/documentation/head/connect.html
 databaseUrl      = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
 
 
-
-# absolute path to mondrian schema xml file (part of project Dwh component)
-mondrianSchemaFile = /path/to/yuz/project/Zed/application/components/Xxx/Dwh/mondrian-schema.xml
+# absolute path to mondrian schema xml file
+mondrianSchemaFile = /path/to/mondrian-schema.xml
 
 # absolute path to mondrian.properties xml file (if present)
 mondrianPropertiesFile =

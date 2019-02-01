@@ -96,7 +96,7 @@ public class MondrianConnector {
         dataSources.addContent(dataSource);
 
         dataSource.addContent(new Element("DataSourceName").setText(dataSourceName));
-        dataSource.addContent(new Element("DataSourceDescription").setText(dataSourceName + " Mondrian DWH server"));
+        dataSource.addContent(new Element("DataSourceDescription").setText("Mondrian server"));
         dataSource.addContent(new Element("URL").setText(baseUrl + "/xmla"));
         dataSource.addContent(new Element("DataSourceInfo").setText(
                   "Provider=mondrian; " + "Locale=" + locale + "; "
