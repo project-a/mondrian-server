@@ -48,8 +48,8 @@ public class MondrianConnector {
     @Autowired private SaikuConnectionManager connectionManager;
 
     private static MondrianServer server;
-    private static String         dataSourceName;
-    private static String         catalogName;
+    private static String         dataSourceName = "Mondrian";
+    private static String         catalogName = "Mondrian";
 
     private static final String JDBC_DRIVERS = "org.postgresql.Driver";
 
@@ -79,8 +79,6 @@ public class MondrianConnector {
     private synchronized void connectMondrianServer() {
 
         // read config values
-        dataSourceName = config.getProperty("dataSourceName", "Cubes");
-        catalogName    = config.getProperty("catalogName", "dwh");
         String baseUrl = config.getProperty("baseUrl", "");
         String locale  = config.getRequiredProperty("locale");
         String mondrianSchemaFile = config.getRequiredProperty("mondrianSchemaFile");

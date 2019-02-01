@@ -6,11 +6,7 @@
 # public base url of cubes application (used in discovery methods of XMLA interface)
 cubesBaseUrl = http://dwh-us.example.com/
 
-# Name of the datasource
-dataSourceName = Cubes
 
-# Name of the catalog
-catalogName = dwh
 
 # connection to postgresql dwh database
 databaseUrl      = jdbc:postgresql://localhost/dwh

@@ -28,8 +28,6 @@ See `mondrian-properties.properties.example` as an example.
 The following configuration parameters can be set:
 
 - `baseUrl`: Public base url of the Tomcat where mondrian-server.war is installed
-- `dataSourceName`: Name for the datasource (optional, default is "Cubes")
-- `catalogName`: Name for the catalog (optional, default is "dwh")
 
 - `databaseUrl`: JDBC connection string for the database connection to be used
 - `databaseUser`: Database user name (optional, can be part of the URL)
