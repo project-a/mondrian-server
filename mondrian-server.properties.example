@@ -14,7 +14,8 @@ databaseUrl      = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
 # absolute path to mondrian schema xml file
 mondrianSchemaFile = /path/to/mondrian-schema.xml
 
-# absolute path to mondrian.properties xml file (if present)
+# absolute path to a mondrian.properties file for tuning the mondrian engine
+# see https://mondrian.pentaho.com/documentation/configuration.php for options
 mondrianPropertiesFile =
 
 # directory where saiku user queries are stored

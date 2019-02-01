@@ -132,15 +132,6 @@ public class MondrianConnector {
      * Reads an external mondrian.properties file, if present.
      */
     private void readMondrianProperties() throws IOException {
-
-        // store mondrian specific properties as system properties, where
-        // mondrian will find them
-        for (Entry<String, String> entry : config.getProperties().entrySet()) {
-            if (entry.getKey().startsWith("mondrian.")) {
-                System.setProperty(entry.getKey(), entry.getValue());
-            }
-        }
-
         String fileName = config.getProperty("mondrianPropertiesFile");
         if (StringUtils.isBlank(fileName)) {
             return;
