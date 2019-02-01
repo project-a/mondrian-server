@@ -19,7 +19,7 @@ mondrianSchemaFile = /path/to/mondrian-schema.xml
 mondrianPropertiesFile =
 
 
-# directory where saiku user queries are stored
+# the directory where saiku user queries are stored
 saikuStorageDir = /tmp
 
 
