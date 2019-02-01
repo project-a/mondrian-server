@@ -51,7 +51,7 @@ public class SaikuDatasourceManager implements IDatasourceManager {
 
     @PostConstruct
     public void init() throws Exception {
-        storageDir = config.getProperty("saikuStorageDir", ".");
+        storageDir = config.getProperty("saikuStorageDir", "/tmp");
         new File(storageDir).mkdirs();
     }
 
