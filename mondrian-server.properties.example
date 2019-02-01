@@ -18,8 +18,10 @@ mondrianSchemaFile = /path/to/mondrian-schema.xml
 # see https://mondrian.pentaho.com/documentation/configuration.php for options
 mondrianPropertiesFile =
 
+
 # directory where saiku user queries are stored
-saikuStorageDir =
+saikuStorageDir = /tmp
+
 
 # URL that will be called to check whether a given user has access rights to Saiku
 saikuAuthorizationUrl =
