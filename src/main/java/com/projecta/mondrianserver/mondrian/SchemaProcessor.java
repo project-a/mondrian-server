@@ -40,8 +40,6 @@ public class SchemaProcessor implements DynamicSchemaProcessor {
     public void readSchema() throws Exception {
 
         String mondrianSchemaFile  = config.getRequiredProperty("mondrianSchemaFile");
-        String currencyCode        = config.getRequiredProperty("currencyCode");
-        String currencyPlaceholder = config.getRequiredProperty("currencyPlaceholder");
 
         // configuration to use include files
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -62,18 +60,7 @@ public class SchemaProcessor implements DynamicSchemaProcessor {
 
         // add a timestamp to the XML to force a schema reload even if nothing
         // has changed
-        String schema = result.getWriter().toString() + "<!-- " + System.currentTimeMillis() + "-->";
-
-        // change EUR string to the matching symbol
-        if (currencyCode.equals("EUR"))
-            currencyCode = "€";
-
-        // append white space in case replaceWith contains more than one
-        // character
-        if (currencyCode.length() > 1)
-            currencyCode = " " + currencyCode;
-
-        schemaXML = schema.replace(currencyPlaceholder, currencyCode);
+        schemaXML = result.getWriter().toString() + "<!-- " + System.currentTimeMillis() + "-->";
     }
 
 

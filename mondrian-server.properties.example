@@ -45,11 +45,8 @@ logSql = true
 logXmla = true
 
 
-# the locale that is used for formatting numbers (1.234,56 vs. 1,234.56)
+# the locale that is used for formatting numbers (1.234,56 vs. 1,234.56) and currencies (€ vs. $)
 locale = de_DE
 
-# the currency symbol that will be used to display currencies plus the string to match for replacing currency symbols
-currencyCode = EUR
-currencyPlaceholder = @
 
 

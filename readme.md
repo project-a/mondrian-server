@@ -50,8 +50,6 @@ The following configuration parameters can be set:
 - `logAll`: Set to "true" to enable logging of all mondrian output
 
 - `locale`: The locale that is used for formatting numbers
-- `currencyCode`: The currency symbol that will be used to display currencies
-- `currencyPlaceholder`: Placeholder for  replacing currency symbols
 
 
 API
