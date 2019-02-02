@@ -162,7 +162,7 @@ public class MondrianConnector {
      */
     private void configureLogLevels() {
 
-        if (StringUtils.equalsIgnoreCase(config.getProperty("logAll"), "true")) {
+        if (StringUtils.equalsIgnoreCase(config.getProperty("logMondrian"), "true")) {
             Logger.getLogger("mondrian").setLevel(Level.DEBUG);
         }
 

@@ -2,18 +2,18 @@
 # Configuration of the Mondrian Server application
 #
 
-
 # public base url of mondrian server application (used in discovery methods of XMLA interface)
 cubesBaseUrl = https://localhost:8080
 
 
 # JDBC Url for connection to the dwh database
 # For PostgreSQL, see https://jdbc.postgresql.org/documentation/head/connect.html
-databaseUrl      = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
+databaseUrl = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
 
 
 # absolute path to mondrian schema xml file
 mondrianSchemaFile = /path/to/mondrian-schema.xml
+
 
 # absolute path to a mondrian.properties file for tuning the mondrian engine, keep empty for defaults
 # see https://mondrian.pentaho.com/documentation/configuration.php for options
@@ -39,9 +39,11 @@ excelUsername =
 excelPassword =
 
 # enable/disable logging of MDX, generated SQL queries or all mondrian output
-logMdx = false
-logSql = false
-logAll = false
+logMondrian = true
+logMdx = true
+logSql = true
+logXmla = true
+
 
 # the locale that is used for formatting numbers (1.234,56 vs. 1,234.56)
 locale = de_DE

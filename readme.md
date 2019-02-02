@@ -3,6 +3,8 @@ Monsai Documentation
 
 Monsai is a combined build of Saiku, Mondrian and some additional functionality.
 
+store saiku queries in a file system directory
+
 
 Build Process
 -------------
@@ -30,8 +32,6 @@ The following configuration parameters can be set:
 - `baseUrl`: Public base url of the Tomcat where mondrian-server.war is installed
 
 - `databaseUrl`: JDBC connection string for the database connection to be used
-- `databaseUser`: Database user name (optional, can be part of the URL)
-- `databasePassword`: Database password (optional)
 
 - `mondrianSchemaFile`: Absolute path to mondrian schema xml file
 - `mondrianPropertiesFile`: Absolute path to mondrian.properties file (optional)
