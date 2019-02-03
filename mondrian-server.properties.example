@@ -6,12 +6,12 @@
 cubesBaseUrl = https://localhost:8080
 
 
-# JDBC Url for connection to the dwh database
+# JDBC Url for connection to the dwh database (required)
 # For PostgreSQL, see https://jdbc.postgresql.org/documentation/head/connect.html
 databaseUrl = jdbc:postgresql://localhost/dwh?user=dwh&password=123abc
 
 
-# absolute path to mondrian schema xml file
+# absolute path to mondrian schema xml file (required)
 mondrianSchemaFile = /path/to/mondrian-schema.xml
 
 

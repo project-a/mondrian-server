@@ -1,3 +1,46 @@
+# Mondrian Server
+
+This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), a Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source. 
+
+If you work with Python, then you can use [Mara Mondrian](https://github.com/project-a/mara-mondrian) to interact with Mondrian Server.
+
+&nbsp;
+
+
+Given that you have 
+
+1. a JDBC connection for an existing Data Warehouse,
+2. a Mondrian [cube definitions xml file](https://mondrian.pentaho.com/documentation/schema.php), and a
+3. [mondrian-server.properties](#configuring-mondrian-server) file,
+
+running the server is as easy as 
+
+```
+java -Dmondrian-server.properties=/path/to/mondrian-server.properties -jar jetty-runner.jar --port 8080 mondrian-server.war
+```
+
+&nbsp;
+
+This will expose the following apps / apis on [http://localhost:8080](http://localhost:8080):
+
+- `/`: The [Saiku](http://meteorite.bi/saiku) web app running on the configured data source.
+- `/xmla`: An unauthenticated API endpoint for running [XMLA](https://en.wikipedia.org/wiki/XML_for_Analysis) requests / [MDX](https://en.wikipedia.org/wiki/MultiDimensional_eXpressions) queries against the Data Warehouse. **Use only for dev environments**.
+- `/xmla-with-auth`: Like `/xmla`, but with user/ password based authentication
+- `/flush-caches`: Clears all mondrian caches and reloads the cube definitions .xml file.
+- `/stats`: Prints memory usage statistics and currently running queries.
+
+
+
+## Features
+
+- Only a single (JDBC) data source
+- Curreny version of Mondrian together with Saiku
+- Cube level permissions via external ACL
+
+
+## Configuring mondrian-server
+
+
 
 **coming soon**
 
@@ -5,7 +48,7 @@ Monsai = MONdrian xmla server + SAIku.
 
 Monsai bundles the Pentaho Mondrian OLAP engine (http://mondrian.pentaho.com), the Mondrian XMLA server, and the Saiku Ad-hoc analysis tool (http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file with a single shared instance of the Mondrian engine.
 
-This can be be useful if you want to be able to run Saiku and an external XMLA based reporting frontend on the same data source. 
+ 
 
 To get it running (provided you have a Mondrian schema and a matching database), copy *monsai.war* to some directory and configure your Tomcat *server.xml* like this:
 
@@ -118,12 +161,6 @@ The following configuration parameters can be set:
 API
 ---
 
-The following URLs are provided as an external API:
-
-- `/`: Starts the Saiku web application
-- `/xmla`: API endpoint for MDX queries
-- `/excel`: API endpoint for MDX queries from Excel integration
-- `/flush-caches`: Clears all mondrian caches
 
 
 Authentication
