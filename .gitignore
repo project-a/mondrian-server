@@ -8,6 +8,5 @@
 /.settings/
 /.classpath
 /.project
-*.war
 .idea
 *.iml
