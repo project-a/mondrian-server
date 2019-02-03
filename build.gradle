@@ -221,7 +221,8 @@ eclipse {
         file {
             whenMerged {
                 def source = entries.find { it.path == 'tmp/main/java' }
-                source.entryAttributes['ignore_optional_problems'] = 'true'
+                // @andi: does not work when run the first time
+                //source.entryAttributes['ignore_optional_problems'] = 'true'
             }
         }
     }
