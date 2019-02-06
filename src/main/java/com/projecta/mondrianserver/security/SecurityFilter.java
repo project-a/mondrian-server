@@ -27,7 +27,7 @@ import com.projecta.mondrianserver.saiku.SaikuSessionService;
 public class SecurityFilter implements Filter {
 
     private SaikuSessionService sessionService;
-    private ExcelUserService     excelUserService;
+    private XmlaAuthenticationService     excelUserService;
 
 
     /**
@@ -38,7 +38,7 @@ public class SecurityFilter implements Filter {
 
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(filterConfig.getServletContext());
         sessionService = applicationContext.getBean(SaikuSessionService.class);
-        excelUserService = applicationContext.getBean(ExcelUserService.class);
+        excelUserService = applicationContext.getBean(XmlaAuthenticationService.class);
     }
 
 
@@ -64,7 +64,7 @@ public class SecurityFilter implements Filter {
         }
 
         // requests for excel are authenticated using the ExcelUserService
-        if (url.startsWith("/excel")) {
+        if (url.startsWith("/xmla-with-auth")) {
             if (excelUserService.authenticateRequest(request)) {
                 chain.doFilter(servletRequest, servletResponse);
                 return;

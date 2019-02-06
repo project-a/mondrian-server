@@ -14,7 +14,7 @@ sourceCompatibility = 1.8
 ext.saikuReleaseTag = 'tag-3.16'
 
 // Mondrian Version
-ext.mondrianReleaseTag = '8.2.0.1-R'
+ext.mondrianReleaseTag = '8.3.0.0-RC'
 ext.mondrianVersion = '8.3.0.0-SNAPSHOT'
 
 
@@ -221,8 +221,9 @@ eclipse {
         file {
             whenMerged {
                 def source = entries.find { it.path == 'tmp/main/java' }
-                // @andi: does not work when run the first time
-                //source.entryAttributes['ignore_optional_problems'] = 'true'
+                if (source) {
+                    source.entryAttributes['ignore_optional_problems'] = 'true'
+                }
             }
         }
     }

@@ -32,17 +32,17 @@ saikuUsername =
 saikuPassword =
 
 # URL that will be called to check whether a given user has access rights to Excel
-excelAuthorizationUrl =
+xmlaAuthorizationUrl =
 
 # A fixed user name and password for simple Excel authentication
-excelUsername =
-excelPassword =
+xmlaUsername =
+xmlaPassword =
 
 # enable/disable logging of MDX, generated SQL queries or all mondrian output
 logMondrian = true
 logMdx = true
 logSql = true
-logXmla = true
+logXmla = false
 
 
 # the locale that is used for formatting numbers (1.234,56 vs. 1,234.56) and currencies (€ vs. $)

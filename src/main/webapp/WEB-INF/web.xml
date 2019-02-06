@@ -101,7 +101,7 @@
 
     <servlet-mapping>
         <servlet-name>XmlaServlet</servlet-name>
-        <url-pattern>/excel/*</url-pattern>
+        <url-pattern>/xmla-with-auth/*</url-pattern>
     </servlet-mapping>
 
     <absolute-ordering />

@@ -39,7 +39,7 @@ public class SchemaProcessor implements DynamicSchemaProcessor {
      */
     public void readSchema() throws Exception {
 
-        String mondrianSchemaFile  = config.getRequiredProperty("mondrianSchemaFile");
+        String mondrianSchemaFile = config.getRequiredProperty("mondrianSchemaFile");
 
         // configuration to use include files
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

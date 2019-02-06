@@ -43,15 +43,15 @@ import mondrian.xmla.XmlaServlet;
 @Component
 public class MondrianConnector {
 
-    @Autowired private Config                  config;
-    @Autowired private SchemaProcessor         schemaProcessor;
+    @Autowired private Config                 config;
+    @Autowired private SchemaProcessor        schemaProcessor;
     @Autowired private SaikuConnectionManager connectionManager;
 
     private static MondrianServer server;
-    private static String         dataSourceName = "Mondrian";
-    private static String         catalogName = "Mondrian";
 
-    private static final String JDBC_DRIVERS = "org.postgresql.Driver";
+    private static final String DEFAULT_JDBC_DRIVERS    = "org.postgresql.Driver";
+    private static final String DEFAULT_DATASOURCE_NAME = "Mondrian";
+    private static final String DEFAULT_CATALOG_NAME    = "Mondrian";
 
     private static final Logger LOG = Logger.getLogger(MondrianConnector.class);
 
@@ -84,7 +84,8 @@ public class MondrianConnector {
         String mondrianSchemaFile = config.getRequiredProperty("mondrianSchemaFile");
 
         // read database connection parameters
-        String databaseUrl = config.getProperty("databaseUrl");
+        String databaseUrl = config.getRequiredProperty("databaseUrl");
+        String databaseDrivers = config.getProperty("databaseDrivers", DEFAULT_JDBC_DRIVERS);
 
         // initialize the sql proxy
         @SuppressWarnings( "unused" )
@@ -95,13 +96,14 @@ public class MondrianConnector {
         Element dataSource = new Element("DataSource");
         dataSources.addContent(dataSource);
 
-        dataSource.addContent(new Element("DataSourceName").setText(dataSourceName));
+        dataSource.addContent(new Element("DataSourceName").setText(DEFAULT_DATASOURCE_NAME));
         dataSource.addContent(new Element("DataSourceDescription").setText("Mondrian server"));
         dataSource.addContent(new Element("URL").setText(baseUrl + "/xmla"));
         dataSource.addContent(new Element("DataSourceInfo").setText(
                   "Provider=mondrian; " + "Locale=" + locale + "; "
                 + "DynamicSchemaProcessor=" + SchemaProcessor.class.getName() + "; "
                 + "UseContentChecksum=true; "
+                + "JdbcDrivers=" + databaseDrivers + "; "
                 + "Jdbc=" + databaseUrl));
 
         dataSource.addContent(new Element("ProviderName").setText("Mondrian"));
@@ -109,7 +111,7 @@ public class MondrianConnector {
         dataSource.addContent(new Element("AuthenticationMode").setText("Unauthenticated"));
 
         Element catalog = new Element("Catalog");
-        catalog.setAttribute("name", catalogName);
+        catalog.setAttribute("name", DEFAULT_CATALOG_NAME);
         catalog.addContent(new Element("Definition").setText("file:/" + mondrianSchemaFile));
         dataSource.addContent(new Element("Catalogs").addContent(catalog));
 
@@ -132,6 +134,7 @@ public class MondrianConnector {
      * Reads an external mondrian.properties file, if present.
      */
     private void readMondrianProperties() throws IOException {
+
         String fileName = config.getProperty("mondrianPropertiesFile");
         if (StringUtils.isBlank(fileName)) {
             return;
@@ -194,7 +197,7 @@ public class MondrianConnector {
      */
     public static OlapConnection getOlapConnection() {
         try {
-            OlapConnection connection = server.getConnection(dataSourceName, catalogName, null);
+            OlapConnection connection = server.getConnection(DEFAULT_DATASOURCE_NAME, DEFAULT_CATALOG_NAME, null);
             applyPermissions(connection);
             return connection;
         }

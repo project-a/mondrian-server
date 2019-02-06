@@ -1,19 +1,19 @@
 # Mondrian Server
 
-This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), a Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source. 
+This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), a Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source.
 
 If you work with Python, then you can use [Mara Mondrian](https://github.com/project-a/mara-mondrian) to interact with Mondrian Server.
 
 &nbsp;
 
 
-Given that you have 
+Given that you have
 
 1. a JDBC connection for an existing Data Warehouse,
 2. a Mondrian [cube definitions xml file](https://mondrian.pentaho.com/documentation/schema.php), and a
 3. [mondrian-server.properties](#configuring-mondrian-server) file,
 
-running the server is as easy as 
+running the server is as easy as
 
 ```
 java -Dmondrian-server.properties=/path/to/mondrian-server.properties -jar jetty-runner.jar --port 8080 mondrian-server.war
@@ -48,7 +48,7 @@ Monsai = MONdrian xmla server + SAIku.
 
 Monsai bundles the Pentaho Mondrian OLAP engine (http://mondrian.pentaho.com), the Mondrian XMLA server, and the Saiku Ad-hoc analysis tool (http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file with a single shared instance of the Mondrian engine.
 
- 
+
 
 To get it running (provided you have a Mondrian schema and a matching database), copy *monsai.war* to some directory and configure your Tomcat *server.xml* like this:
 
@@ -146,9 +146,9 @@ The following configuration parameters can be set:
 - `saikuAuthorizationUrl`: URL that will be called to check whether a given user has access rights to Saiku (optional)
 - `saikuUsername`: A fixed user name for simple Saiku authentication
 - `saikuPassword`: A fixed password for simple Saiku authentication
-- `excelAuthorizationUrl`: URL that will be called to check whether a given user has access rights to Excel (optional)
-- `excelUsername`: A fixed user name for simple Excel authentication
-- `excelPassword`: A fixed password for simple Excel authentication
+- `xmlaAuthorizationUrl`: URL that will be called to check whether a given user has access rights to the /xmla-with-auth endpoint(optional)
+- `xmlaUsername`: A fixed user name for simple authentication to the /xmla-with-auth endpoint
+- `xmlaPassword`: A fixed password for simple authentication to the /xmla-with-auth endpoint
 
 - `logMdx`: Set to "true" to enable logging of all executed MDX statements
 - `logSql`: Set to "true" to enable logging of all executed SQL statements
@@ -175,8 +175,8 @@ The configured URL is then called with the given user name as parameter. This UR
 return a JSON response `{"allowed":true}` or `{"allowed":false}` to control access to Saiku.
 A successful authentication will be cached for 30 minutes.
 
-When the configuration parameter `excelAuthorizationUrl` is set, all requests to the
-`\excel` endpoint require a username and password via HTTP Basic Authentication.
+When the configuration parameter `xmlaAuthorizationUrl` is set, all requests to the
+`\xmla-with-auth` endpoint require a username and password via HTTP Basic Authentication.
 The configured URL is then called with the given user name and password as parameters.
 This URL must return a JSON response `{"allowed":true}` or `{"allowed":false}` to control
 access to the excel endpoint. A successful authentication will be cached for 30 minutes.
@@ -198,7 +198,7 @@ To access DWH information from Microsoft Excel, you have to do the following ste
 - Click on "New Source..."
 - Select "Others", then click "Continue >"
 - Select "XMLA Data Source", then click "Continue >>"
-- For "Location", enter the Saiku URL + `/excel`
+- For "Location", enter the Saiku URL + `/xmla-with-auth`
 - For "User name" and "Password" enter the configured user name and password
 - Select the catalog, then click "OK"
 - Select the cube you want to query, then click "Continue >"

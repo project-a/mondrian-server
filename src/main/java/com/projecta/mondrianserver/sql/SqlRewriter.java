@@ -26,9 +26,6 @@ import mondrian.util.Pair;
  *
  * - When using sum() or count(distinct) on a field of type hll, the aggregation
  *   is replaced by a call to hll_cardinality()
- *
- * - When using a constraint on a joined dimension table, the fact table will be
- *   constraint as well, to help the postgres execution planner
  */
 public class SqlRewriter {
 
