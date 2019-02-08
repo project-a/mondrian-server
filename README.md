@@ -1,6 +1,6 @@
 # Mondrian Server
 
-This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), a Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source.
+This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), the Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source.
 
 If you work with Python, then you can use [Mara Mondrian](https://github.com/project-a/mara-mondrian) to interact with Mondrian Server.
 
@@ -24,29 +24,36 @@ java -Dmondrian-server.properties=/path/to/mondrian-server.properties -jar jetty
 This will expose the following apps / apis on [http://localhost:8080](http://localhost:8080):
 
 - `/`: The [Saiku](http://meteorite.bi/saiku) web app running on the configured data source.
-- `/xmla`: An unauthenticated API endpoint for running [XMLA](https://en.wikipedia.org/wiki/XML_for_Analysis) requests / [MDX](https://en.wikipedia.org/wiki/MultiDimensional_eXpressions) queries against the Data Warehouse. **Use only for dev environments**.
+- `/xmla`: An unauthenticated API endpoint for running [XMLA](https://en.wikipedia.org/wiki/XML_for_Analysis) requests / [MDX](https://en.wikipedia.org/wiki/MultiDimensional_eXpressions) queries against the Data Warehouse.
 - `/xmla-with-auth`: Like `/xmla`, but with user/ password based authentication
 - `/flush-caches`: Clears all mondrian caches and reloads the cube definitions .xml file.
 - `/stats`: Prints memory usage statistics and currently running queries.
 
 
+&nbsp;
 
 ## Features
 
-- Only a single (JDBC) data source
-- Curreny version of Mondrian together with Saiku
-- Cube level permissions via external ACL
+Mondrian Server makes a few assumptions / simplifications that have worked well for us in the past:
+
+- **Single database connection**: Only one JDBC database connection can be configured for accessing the data warehouse (rather than a catalog of connections). This connection is then hard-wired in the XML server and in Saiku.
+
+- **Mondrian 8 together with Saiku**: Saiku is based on Mondrian 4, which is not backward compatible with Mondrian 3. However, more development has happened on Mondrian 3, and [it is called now Mondrian 8](https://community.hitachivantara.com/thread/14069-what-is-the-status-of-mondrian-4x-where-is-the-latest-code). Mondrian Server patches Saiku to work together with Mondrian 8.
+
+- **External ACL for Saiku and XMLA**: External ACL providers can be integrated for authenticating users.
+
+- **Cube level permissions**: When the external ACL is used, permissions can be defined per user and cube.
+
+- **Simplified user managment in Saiku**: The internal user management and other configuration features of Saiku have been disabled in favor of external ACL and folder based query repositories.
 
 
-## Configuring mondrian-server
+
+## Configuring Mondrian Server
+
+Only one configuration file [mondrian-server.properties](#configuring-mondrian-server) is used to configure the whole app. No need to unpack the war file.
 
 
 
-**coming soon**
-
-Monsai = MONdrian xmla server + SAIku.
-
-Monsai bundles the Pentaho Mondrian OLAP engine (http://mondrian.pentaho.com), the Mondrian XMLA server, and the Saiku Ad-hoc analysis tool (http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file with a single shared instance of the Mondrian engine.
 
 
 
@@ -75,42 +82,6 @@ To get it running (provided you have a Mondrian schema and a matching database),
 </Server>
 ```
 
-The referenced configuration file *monsai.properties* looks like this:
-
-```ini
-# jdbc url
-jdbcUrl=jdbc:postgresql://localhost/dwh;JdbcDrivers=org.postgresql.Driver;JdbcUser=user
-
-# absolute path to mondrian schema
-mondrianSchemaFile=/path/to/mondrian-schema.xml
-
-
-# locale (mostly for displaying numbers)
-locale=en_US
-
-# fixed saiku user / password
-saikuUsername=asdf
-saikuPassword=asdf
-```
-
-
-Restart Tomcat and hopefully see the following urls working
-
-- http://localhost:8080 Saiku (user / password: asdf)
-
-- http://localhost:8080/xmla The XMLA interface
-
-- http://localhost:8080/flush-caches Purging of all caches and reloading of mondrian schema
-
-
-
-Monsai Documentation
-====================
-
-Monsai is a combined build of Saiku, Mondrian and some additional functionality.
-
-store saiku queries in a file system directory
-
 
 Build Process
 -------------
@@ -135,32 +106,6 @@ See `mondrian-properties.properties.example` as an example.
 
 The following configuration parameters can be set:
 
-- `baseUrl`: Public base url of the Tomcat where mondrian-server.war is installed
-
-- `databaseUrl`: JDBC connection string for the database connection to be used
-
-- `mondrianSchemaFile`: Absolute path to mondrian schema xml file
-- `mondrianPropertiesFile`: Absolute path to mondrian.properties file (optional)
-
-- `saikuStorageDir`: Absolute path to the directory where Saiku user queries will be stored. This directory must exist and be writable.
-- `saikuAuthorizationUrl`: URL that will be called to check whether a given user has access rights to Saiku (optional)
-- `saikuUsername`: A fixed user name for simple Saiku authentication
-- `saikuPassword`: A fixed password for simple Saiku authentication
-- `xmlaAuthorizationUrl`: URL that will be called to check whether a given user has access rights to the /xmla-with-auth endpoint(optional)
-- `xmlaUsername`: A fixed user name for simple authentication to the /xmla-with-auth endpoint
-- `xmlaPassword`: A fixed password for simple authentication to the /xmla-with-auth endpoint
-
-- `logMdx`: Set to "true" to enable logging of all executed MDX statements
-- `logSql`: Set to "true" to enable logging of all executed SQL statements
-- `logXmla`: Set to "true" to enable logging of all XMLA requests and responses
-- `logAll`: Set to "true" to enable logging of all mondrian output
-
-- `locale`: The locale that is used for formatting numbers
-
-
-API
----
-
 
 
 Authentication
@@ -180,32 +125,4 @@ When the configuration parameter `xmlaAuthorizationUrl` is set, all requests to 
 The configured URL is then called with the given user name and password as parameters.
 This URL must return a JSON response `{"allowed":true}` or `{"allowed":false}` to control
 access to the excel endpoint. A successful authentication will be cached for 30 minutes.
-
-
-Excel Integration Guide
------------------------
-
-To access DWH information from Microsoft Excel, you have to do the following steps:
-
-- First, download the XMLA driver [XMLA_provider_v1.0.0.103.exe](https://sourceforge.net/projects/xmlaconnect/files) on the client machine and go through the steps of the installation process.
-
-
-- Start Microsoft Excel
-- Click on "Insert", then "PivotTable"
-- Select "Choose external data source"
-- Click on "Choose connection", the "Existing Connections" dialog is displayed
-- Click on "Browse for More...", the "Select Data Source" dialog is displayed
-- Click on "New Source..."
-- Select "Others", then click "Continue >"
-- Select "XMLA Data Source", then click "Continue >>"
-- For "Location", enter the Saiku URL + `/xmla-with-auth`
-- For "User name" and "Password" enter the configured user name and password
-- Select the catalog, then click "OK"
-- Select the cube you want to query, then click "Continue >"
-- Click on "Finish"
-- Click on "OK"
-- You can now select the fields and columns you want to query from the Excel PivotTable view
-- All queries are executed automatically and are shown as a table in Excel
-
-
 

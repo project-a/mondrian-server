@@ -3,7 +3,7 @@
 #
 
 # public base url of mondrian server application (used in discovery methods of XMLA interface)
-cubesBaseUrl = https://localhost:8080
+baseUrl = https://localhost:8080
 
 
 # JDBC Url for connection to the dwh database (required)
