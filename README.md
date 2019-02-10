@@ -9,9 +9,9 @@ If you work with Python, then you can use [Mara Mondrian](https://github.com/pro
 
 Given that you have
 
-1. a JDBC connection for an existing Data Warehouse,
+1. a JDBC connection URL for an existing Data Warehouse,
 2. a Mondrian [cube definitions xml file](https://mondrian.pentaho.com/documentation/schema.php), and a
-3. [mondrian-server.properties](#configuring-mondrian-server) file,
+3. [mondrian-server.properties](mondrian-server.properties) file,
 
 running the server is as easy as
 
@@ -36,9 +36,9 @@ This will expose the following apps / apis on [http://localhost:8080](http://loc
 
 Mondrian Server makes a few assumptions / simplifications that have worked well for us in the past:
 
-- **Single database connection**: Only one JDBC database connection can be configured for accessing the data warehouse (rather than a catalog of connections). This connection is then hard-wired in the XML server and in Saiku.
+- **Single database connection**: Only one JDBC database connection can be configured for accessing the data warehouse (rather than a catalog of connections). This connection is then hard-wired in the XMLA server and in Saiku.
 
-- **Mondrian 8 together with Saiku**: Saiku is based on Mondrian 4, which is not backward compatible with Mondrian 3. However, more development has happened on Mondrian 3, and [it is called now Mondrian 8](https://community.hitachivantara.com/thread/14069-what-is-the-status-of-mondrian-4x-where-is-the-latest-code). Mondrian Server patches Saiku to work together with Mondrian 8.
+- **Mondrian 8 together with Saiku**: Saiku works with Mondrian 4, which is not backward compatible with Mondrian 3. However, more development has happened on Mondrian 3, and [it is called now Mondrian 8](https://community.hitachivantara.com/thread/14069-what-is-the-status-of-mondrian-4x-where-is-the-latest-code). Mondrian Server patches Saiku to work together with Mondrian 8.
 
 - **External ACL for Saiku and XMLA**: External ACL providers can be integrated for authenticating users.
 
@@ -48,16 +48,19 @@ Mondrian Server makes a few assumptions / simplifications that have worked well 
 
 
 
-## Configuring Mondrian Server
+## Configuring and running Mondrian Server
 
-Only one configuration file [mondrian-server.properties](#configuring-mondrian-server) is used to configure the whole app. No need to unpack the war file.
+Only one configuration file [mondrian-server.properties](mondrian-server.properties) is used to configure the whole app. No need to unpack the war file. The path to this file is passed via the `mondrian-server.properties` system properties.
 
+If you want to use jetty, then you can run Mondrian Server with 
 
+```
+java -Dmondrian-server.properties=/path/to/mondrian-server.properties -jar jetty-runner.jar --port 8080 mondrian-server.war
+```
 
+&nbsp;
 
-
-
-To get it running (provided you have a Mondrian schema and a matching database), copy *monsai.war* to some directory and configure your Tomcat *server.xml* like this:
+If you want to use Tomcat, then this is a minimal `server.xml` for running the app:
 
 ```xml
 <?xml version='1.0' encoding='utf-8'?>
@@ -72,14 +75,50 @@ To get it running (provided you have a Mondrian schema and a matching database),
         <Engine name="default">
 
             <Host name="localhost" unpackWARs="false" autoDeploy="false">
-                <Context docBase="/path/to/monsai.war" path="" crossContext="true" swallowOutput="true" reloadable="false" >
-                    <Parameter name="monsai.config" value="/path/to/monsai.properties" override="false"/>
+                <Context docBase="/path/to/mondrian-server.war" path="" crossContext="true" swallowOutput="true" reloadable="false" >
+                    <Parameter name="mondrian-server.properties" value="/path/to/mondrian-server.properties" override="false"/>
                 </Context>
             </Host>
 
         </Engine>
     </Service>
 </Server>
+```
+
+&nbsp;
+
+If you want to use another JDBC driver than the included driver for PostgreSQL, then pass the directory containing the .jar file via the `--lib` option in jetty-runner or put the .jar file in the `lib` folder of Tomcat.
+
+&nbsp;
+
+This is our recommended way for exposing Saiku through Nginx. The idea is to use an external auth provider such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) for authenticating users and an ACL web service such as provided by the [Mara Mondrian](https://github.com/project-a/mara-mondrian) for ACL (which user can access which cube?):
+
+```nginx
+server {
+    listen 127.0.0.1:81;  # listen as a downstream of an external auth provider
+    
+    server_name saiku.example.com; # the host name to run Saiku on
+
+    location / {
+        # set some proxy parameters
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-Real-Ip $http_x_real_ip;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        proxy_buffering off;
+        send_timeout 600;
+
+        # the host / port where mondrian server is running
+        proxy_pass http://127.0.0.1:8080; 
+        
+        # Somehow needed
+        proxy_set_header Authorization ""; 
+        
+        # Add the email or username of the already authenticated user as a header
+        proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
+    }
+}
+
 ```
 
 
@@ -89,23 +128,6 @@ Build Process
 - You need to have gradle installed (use `brew install gradle`)
 - then just run gradle in the project root directory
 - this downloads all required ressources and builds mondrian-server.war
-
-
-Installation
-------------
-
-- mondrian-server.war must be installed in a Apache Tomcat in the root path
-- the context parameter `mondrian-server.properties` must be provided and contain a path to the configuration file
-
-
-Configuration
--------------
-
-The configuration file is a properties file that contains all availaible configuration parameters.
-See `mondrian-properties.properties.example` as an example.
-
-The following configuration parameters can be set:
-
 
 
 Authentication
