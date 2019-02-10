@@ -46,16 +46,18 @@ Mondrian Server makes a few assumptions / simplifications that have worked well 
 
 - **Simplified user managment in Saiku**: The internal user management and other configuration features of Saiku have been disabled in favor of external ACL and folder based query repositories.
 
+&nsbp;
 
 
 ## Configuring and running Mondrian Server
 
 Only one configuration file [mondrian-server.properties](mondrian-server.properties) is used to configure the whole app. No need to unpack the war file. The path to this file is passed via the `mondrian-server.properties` system properties.
 
-If you want to use jetty, then you can run Mondrian Server with 
+If you want to use jetty (recommended), then you can run Mondrian Server with 
 
 ```
-java -Dmondrian-server.properties=/path/to/mondrian-server.properties -jar jetty-runner.jar --port 8080 mondrian-server.war
+java -Dmondrian-server.properties=/path/to/mondrian-server.properties \
+    -jar jetty-runner.jar --port 8080 mondrian-server.war
 ```
 
 &nbsp;
@@ -89,9 +91,12 @@ If you want to use Tomcat, then this is a minimal `server.xml` for running the a
 
 If you want to use another JDBC driver than the included driver for PostgreSQL, then pass the directory containing the .jar file via the `--lib` option in jetty-runner or put the .jar file in the `lib` folder of Tomcat.
 
-&nbsp;
 
-This is our recommended way for exposing Saiku through Nginx. The idea is to use an external auth provider such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) for authenticating users and an ACL web service such as provided by the [Mara Mondrian](https://github.com/project-a/mara-mondrian) for ACL (which user can access which cube?):
+## Authentication & ACL
+
+
+
+This is our recommended way for exposing Saiku through Nginx. The idea is to use an external auth provider such as [oauth2_proxy](https://github.com/pusher/oauth2_proxy) for authenticating users and an ACL web service such as provided by the [Mara Mondrian](https://github.com/project-a/mara-mondrian) for ACL (which user can access which cube?):
 
 ```nginx
 server {
@@ -121,13 +126,11 @@ server {
 
 ```
 
+&nbsp;
 
-Build Process
--------------
+## Building Mondrian Server
 
-- You need to have gradle installed (use `brew install gradle`)
-- then just run gradle in the project root directory
-- this downloads all required ressources and builds mondrian-server.war
+Install **gradle** with `brew install gradle` or `apt-get install gradle`. The runn `gradle` in the project root directory. This will download all required ressources and build `mondrian-server.war` in the project root directory.
 
 
 Authentication
