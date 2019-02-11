@@ -128,32 +128,32 @@ There are three different options for securing the `/` endpoint (Saiku):
     
     This is our recommended way for exposing Saiku through Nginx:
 
-<!-- language: lang-nginx -->
-        server {
-            listen 127.0.0.1:81;  # listen as a downstream of an auth proxy
-            
-            server_name saiku.example.com; # the host name to run Saiku on
+```nginx
+server {
+    listen 127.0.0.1:81;  # listen as a downstream of an auth proxy
+    
+    server_name saiku.example.com; # the host name to run Saiku on
+    
+    location / {
+        # set some proxy parameters
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-Real-Ip $http_x_real_ip;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        proxy_buffering off;
+        send_timeout 600;
+    
+        # the host / port where mondrian server is running
+        proxy_pass http://127.0.0.1:8080; 
         
-            location / {
-                # set some proxy parameters
-                proxy_set_header HOST $http_host;
-                proxy_set_header X-Real-Ip $http_x_real_ip;
-                proxy_send_timeout 600;
-                proxy_read_timeout 600;
-                proxy_buffering off;
-                send_timeout 600;
+        # Somehow needed
+        proxy_set_header Authorization ""; 
         
-                # the host / port where mondrian server is running
-                proxy_pass http://127.0.0.1:8080; 
-                
-                # Somehow needed
-                proxy_set_header Authorization ""; 
-                
-                # Add the email or username of the already authenticated user as a header
-                proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
-            }
-        }
-
+        # Add the email or username of the already authenticated user as a header
+        proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
+    }
+}
+```
     
 &nbsp;
 
