@@ -49,7 +49,7 @@ public class MondrianConnector {
 
     private static MondrianServer server;
 
-    private static final String DEFAULT_JDBC_DRIVERS    = "org.postgresql.Driver";
+    private static final String DEFAULT_JDBC_DRIVER    = "org.postgresql.Driver";
     private static final String DEFAULT_DATASOURCE_NAME = "Mondrian";
     private static final String DEFAULT_CATALOG_NAME    = "Mondrian";
 
@@ -85,7 +85,7 @@ public class MondrianConnector {
 
         // read database connection parameters
         String databaseUrl = config.getRequiredProperty("databaseUrl");
-        String databaseDrivers = config.getProperty("databaseDrivers", DEFAULT_JDBC_DRIVERS);
+        String databaseDriver = config.getProperty("databaseDriver", DEFAULT_JDBC_DRIVER);
 
         // initialize the sql proxy
         @SuppressWarnings( "unused" )
@@ -103,7 +103,7 @@ public class MondrianConnector {
                   "Provider=mondrian; " + "Locale=" + locale + "; "
                 + "DynamicSchemaProcessor=" + SchemaProcessor.class.getName() + "; "
                 + "UseContentChecksum=true; "
-                + "JdbcDrivers=" + databaseDrivers + "; "
+                + "JdbcDrivers=" + databaseDriver + "; "
                 + "Jdbc=" + databaseUrl));
 
         dataSource.addContent(new Element("ProviderName").setText("Mondrian"));
