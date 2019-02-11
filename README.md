@@ -46,12 +46,13 @@ Mondrian Server makes a few assumptions / simplifications that have worked well 
 
 - **Simplified user managment in Saiku**: The internal user management and other configuration features of Saiku have been disabled in favor of external ACL and folder based query repositories.
 
-&nbsp;
+If you use Saiku in your organization, then please consider [sponsoring Saiku](https://www.meteorite.bi/products/saiku/sponsorship).
 
+&nbsp;
 
 ## Configuring and running Mondrian Server
 
-Only one configuration file [mondrian-server.properties](mondrian-server.properties) is used to configure the whole app. No need to unpack the war file. The path to this file is passed via the `mondrian-server.properties` system properties.
+Only one configuration file [mondrian-server.properties](mondrian-server.properties) is used to configure the whole app. No need to unpack the war file. The path to this file is passed via the `mondrian-server.properties` system property.
 
 If you want to use jetty (recommended), then you can run Mondrian Server with 
 

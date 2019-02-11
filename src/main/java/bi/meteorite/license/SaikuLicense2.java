@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * Dummy implementation of bi.meteorite.license.SaikuLicense2
+ *
+ * Please consider sponsoring Saiku: https://www.meteorite.bi/products/saiku/sponsorship
  */
 public class SaikuLicense2 {
 
