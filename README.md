@@ -91,6 +91,7 @@ If you want to use Tomcat, then this is a minimal `server.xml` for running the a
 
 If you want to use another JDBC driver than the included driver for PostgreSQL, then pass the directory containing the .jar file via the `--lib` option in jetty-runner or put the .jar file in the `lib` folder of Tomcat.
 
+&nbsp;
 
 ## Authentication & ACL
 
@@ -104,23 +105,20 @@ There are three different options for securing the `/` endpoint (Saiku):
 
    Mondrian will then post this user name as `username` form field to an ACL endpoint that is configured via the `saikuAuthorizationUrl` property:
    
-   ```
-➜ curl -X POST -F 'username=foo@bar.com' http://localhost:5000/mondrian/saiku/authorize
-{
-  "allowed": false, 
-  "cubes": []
-}
-```
-
-    ```
-➜ curl -X POST -F 'username=martin.loetzsch@project-a.com' http://localhost:5000/mondrian/saiku/authorize
-{
-  "allowed": true, 
-  "cubes": [
-    "Cube 1", 
-    "Cube 2"
-  ]
-}```
+        ➜ curl -X POST -F 'username=foo@bar.com' http://localhost:5000/mondrian/saiku/authorize
+        {
+          "allowed": false, 
+          "cubes": []
+        }
+        
+        ➜ curl -X POST -F 'username=martin.loetzsch@project-a.com' http://localhost:5000/mondrian/saiku/authorize
+        {
+          "allowed": true, 
+          "cubes": [
+            "Cube 1", 
+            "Cube 2"
+          ]
+        }
    
     
 
