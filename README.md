@@ -93,11 +93,13 @@ If you want to use another JDBC driver than the included driver for PostgreSQL, 
 
 &nbsp;
 
-## Authentication & ACL
+## Authentication & ACL 
+
+### Saiku 
 
 There are three different options for securing the `/` endpoint (Saiku):
 
-1. No authentication. That should only be used for local development.
+1. No authentication. That should only be used for local development. This is the default when none of the other two options is configured.
 
 2. Hard-coded single username / password. Set them with the `saikuUsername` and `saikuPassword` properties in [mondrian-server.properties](mondrian-server.properties). Only recommended when the option 3 is not possible.
 
@@ -120,40 +122,57 @@ There are three different options for securing the `/` endpoint (Saiku):
           ]
         }
    
+    The external ACL endpoint either returns an `"allowed": false` JSON object as in the first example or a an `"allowed": true` response followed by the list of all cubes that the user has access to. The user will only be able to access those cubes in Saiku.
     
+    A Python implementation that provides such an endpoint can be found in the [mara mondrian](https://github.com/project-a/mara-mondrian) package.
+    
+    This is our recommended way for exposing Saiku through Nginx:
+
+<!-- language: lang-nginx -->
+        server {
+            listen 127.0.0.1:81;  # listen as a downstream of an auth proxy
+            
+            server_name saiku.example.com; # the host name to run Saiku on
+        
+            location / {
+                # set some proxy parameters
+                proxy_set_header HOST $http_host;
+                proxy_set_header X-Real-Ip $http_x_real_ip;
+                proxy_send_timeout 600;
+                proxy_read_timeout 600;
+                proxy_buffering off;
+                send_timeout 600;
+        
+                # the host / port where mondrian server is running
+                proxy_pass http://127.0.0.1:8080; 
+                
+                # Somehow needed
+                proxy_set_header Authorization ""; 
+                
+                # Add the email or username of the already authenticated user as a header
+                proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
+            }
+        }
+
+    
+&nbsp;
+
+### XMLA
+
+Authentication and ACL for the `/xmla-with-auth` endpoints works slightly different. XMLA clients such as Excel usually can't cope with auth proxies, which is why a username / password authentication is used.
+
+Again, there are 3 options:
+
+1. No authentication. 
+
+2. Hard-coded single username / password, configured via the  `xmlaUsername` and `xmlaPassword` properties.
+
+3. External ACL. 
+
 
 
 The `/xmla`, `/flush-caches` and `/stats` endpoints have no ACL at all, don't expose them to users / the internet.
 
-This is our recommended way for exposing Saiku through Nginx. The idea is to use an external auth provider such as [oauth2_proxy](https://github.com/pusher/oauth2_proxy) for authenticating users and an ACL web service such as provided by the [Mara Mondrian](https://github.com/project-a/mara-mondrian) for ACL (which user can access which cube?):
-
-```nginx
-server {
-    listen 127.0.0.1:81;  # listen as a downstream of an external auth provider
-    
-    server_name saiku.example.com; # the host name to run Saiku on
-
-    location / {
-        # set some proxy parameters
-        proxy_set_header HOST $http_host;
-        proxy_set_header X-Real-Ip $http_x_real_ip;
-        proxy_send_timeout 600;
-        proxy_read_timeout 600;
-        proxy_buffering off;
-        send_timeout 600;
-
-        # the host / port where mondrian server is running
-        proxy_pass http://127.0.0.1:8080; 
-        
-        # Somehow needed
-        proxy_set_header Authorization ""; 
-        
-        # Add the email or username of the already authenticated user as a header
-        proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
-    }
-}
-
-```
 
 &nbsp;
 
