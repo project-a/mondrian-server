@@ -94,7 +94,38 @@ If you want to use another JDBC driver than the included driver for PostgreSQL, 
 
 ## Authentication & ACL
 
+There are three different options for securing the `/` endpoint (Saiku):
 
+1. No authentication. That should only be used for local development.
+
+2. Hard-coded single username / password. Set them with the `saikuUsername` and `saikuPassword` properties in [mondrian-server.properties](mondrian-server.properties). Only recommended when the option 3 is not possible.
+
+3. Header based authentication and external ACL. An auth proxy such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) sits infront of Saiku and authenticates users against an external auth provider (e.g. Google, Github, Azure etc.). The proxy adds the email of the authenticated user as a `saiku-user` http header to the request. 
+
+   Mondrian will then post this user name as `username` form field to an ACL endpoint that is configured via the `saikuAuthorizationUrl` property:
+   
+   ```
+➜ curl -X POST -F 'username=foo@bar.com' http://localhost:5000/mondrian/saiku/authorize
+{
+  "allowed": false, 
+  "cubes": []
+}
+```
+
+    ```
+➜ curl -X POST -F 'username=martin.loetzsch@project-a.com' http://localhost:5000/mondrian/saiku/authorize
+{
+  "allowed": true, 
+  "cubes": [
+    "Cube 1", 
+    "Cube 2"
+  ]
+}```
+   
+    
+
+
+The `/xmla`, `/flush-caches` and `/stats` endpoints have no ACL at all, don't expose them to users / the internet.
 
 This is our recommended way for exposing Saiku through Nginx. The idea is to use an external auth provider such as [oauth2_proxy](https://github.com/pusher/oauth2_proxy) for authenticating users and an ACL web service such as provided by the [Mara Mondrian](https://github.com/project-a/mara-mondrian) for ACL (which user can access which cube?):
 
