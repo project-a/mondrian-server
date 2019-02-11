@@ -99,7 +99,7 @@ If you want to use another JDBC driver than the included driver for PostgreSQL, 
 
 There are three different options for securing the `/` endpoint (Saiku):
 
-1. No authentication. That should only be used for local development. This is the default when none of the other two options is configured.
+1. No authentication. That should only be used for local development. This is the default when none of the other two options are configured.
 
 2. Hard-coded single username / password. Set them with the `saikuUsername` and `saikuPassword` properties in [mondrian-server.properties](mondrian-server.properties). Only recommended when the option 3 is not possible.
 
@@ -157,45 +157,75 @@ server {
     
 &nbsp;
 
-### XMLA
+### XMLA Server
 
 Authentication and ACL for the `/xmla-with-auth` endpoints works slightly different. XMLA clients such as Excel usually can't cope with auth proxies, which is why a username / password authentication is used.
 
-Again, there are 3 options:
+There are 2 options:
 
-1. No authentication. 
+1. Hard-coded single username / password, configured via the  `xmlaUsername` and `xmlaPassword` properties.
 
-2. Hard-coded single username / password, configured via the  `xmlaUsername` and `xmlaPassword` properties.
+2. External ACL. The XMLA client needs to ????. The username / password is then posted to an external ACL endpoint (configured via the `xmlaAuthorizationUrl`) like this: 
 
-3. External ACL. 
+        ➜ curl -X POST -F 'email=foo@bar.com' -F 'password=123abc' http://localhost:5000/mondrian/xmla/authorize
+        {
+          "allowed": false, 
+          "cubes": []
+        }
+
+        ➜ curl -X POST -F 'email=martin.loetzsch@project-a.com' -F 'password=123abc' http://localhost:5000/mondrian/excel/authorize
+        {
+          "allowed": true, 
+          "cubes": [
+            "Cube 1", 
+            "Cube 2"
+          ]
+        }
+        
+   The response is then interpreted in the same way as for the Saiku endpoint.
+
+	This is our recommended nginx config for exposing the XMLA server on the internet:
+	
+```nginx
+server {
+    listen 443; # not behind auth proxy, apply ip restrictions or VPN
+    include ssl.conf; # never run without SSL
+
+    server_name excel.example.com; # host name for the XMLA server
+
+    real_ip_header X-Forwarded-For;
+
+    location / {
+        # allow if the request comes from an office ip
+        default_type text/html;
+
+        # set some proxy parameters
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-Real-Ip $http_x_real_ip;
+        proxy_send_timeout 600;
+        proxy_read_timeout 600;
+        proxy_buffering off;
+        send_timeout 600;
+
+        # Send all requests to single endpoint 
+        proxy_pass http://127.0.0.1:8080/xmla-with-auth/;
+    }
+
+}
+```	
+	
+&nbsp;
 
 
 
-The `/xmla`, `/flush-caches` and `/stats` endpoints have no ACL at all, don't expose them to users / the internet.
+### Other endpoints
+
+The `/xmla`, `/flush-caches` and `/stats` endpoints have no ACL at all, don't expose them to the internet. The nginx host for Saiku above will put them also behind the auth proxy.
 
 
 &nbsp;
 
 ## Building Mondrian Server
 
-Install **gradle** with `brew install gradle` or `apt-get install gradle`. The runn `gradle` in the project root directory. This will download all required ressources and build `mondrian-server.war` in the project root directory.
-
-
-Authentication
---------------
-
-By default, all users are allowed to access Saiku and all API endpoints. It is
-assumed that authentication will have happend at the proxy level.
-
-When the configuration parameter `saikuAuthorizationUrl` is set, all requests to Saiku
-resources require the HTTP header `saiku-user` to be set (this must be set at a proxy level).
-The configured URL is then called with the given user name as parameter. This URL must
-return a JSON response `{"allowed":true}` or `{"allowed":false}` to control access to Saiku.
-A successful authentication will be cached for 30 minutes.
-
-When the configuration parameter `xmlaAuthorizationUrl` is set, all requests to the
-`\xmla-with-auth` endpoint require a username and password via HTTP Basic Authentication.
-The configured URL is then called with the given user name and password as parameters.
-This URL must return a JSON response `{"allowed":true}` or `{"allowed":false}` to control
-access to the excel endpoint. A successful authentication will be cached for 30 minutes.
+Install **gradle** with `brew install gradle` or `apt-get install gradle`. Then run `gradle` in the project root directory. This will download all required ressources and build `mondrian-server.war` in the project root directory.
 
