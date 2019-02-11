@@ -46,7 +46,7 @@ Mondrian Server makes a few assumptions / simplifications that have worked well 
 
 - **Simplified user managment in Saiku**: The internal user management and other configuration features of Saiku have been disabled in favor of external ACL and folder based query repositories.
 
-&nsbp;
+&nbsp;
 
 
 ## Configuring and running Mondrian Server
