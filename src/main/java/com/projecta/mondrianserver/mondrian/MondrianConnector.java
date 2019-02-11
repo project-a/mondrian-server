@@ -135,26 +135,11 @@ public class MondrianConnector {
      */
     private void readMondrianProperties() throws IOException {
 
-        String fileName = config.getProperty("mondrianPropertiesFile");
-        if (StringUtils.isBlank(fileName)) {
-            return;
-        }
-
-        // read the properties file
-        LOG.info("Reading " + fileName);
-        Properties properties = new Properties();
-        try (Reader reader = new InputStreamReader(new FileInputStream(fileName), "UTF8")) {
-            properties.load(reader);
-
-            // store the properties as system properties, where mondrian will
-            // find them
-            for (Entry<Object, Object> entry : properties.entrySet()) {
-                String key = (String) entry.getKey();
-                String value = (String) entry.getValue();
-
-                if (key.startsWith("mondrian.")) {
-                    System.setProperty(key, value);
-                }
+        // store mondrian specific properties as system properties, where
+        // mondrian will find them
+        for (Entry<String, String> entry : config.getProperties().entrySet()) {
+            if (entry.getKey().startsWith("mondrian.")) {
+                System.setProperty(entry.getKey(), entry.getValue());
             }
         }
     }
