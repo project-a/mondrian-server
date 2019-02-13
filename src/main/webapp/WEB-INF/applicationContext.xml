@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler/>
+
+    <context:annotation-config />
+    <context:component-scan base-package="org.saiku" />
+    <context:component-scan base-package="com.projecta" />
+
+    <import resource="saiku-beans.xml" />
+    <import resource="spring-servlet.xml" />
+
+    <!-- Disable database init call -->
+    <bean id="h2database" class="org.saiku.database.Database"/>
+
+    <!-- Overwrite several services with own implementation -->
+    <bean id="repositoryDsManager" class="com.projecta.mondrianserver.saiku.SaikuDatasourceManager" />
+    <bean id="sessionService" class="com.projecta.mondrianserver.saiku.SaikuSessionService"/>
+    <bean id="licenseUtils" class="com.projecta.mondrianserver.saiku.SaikuLicenseUtils"/>
+    <bean id="userDAO" class="com.projecta.mondrianserver.saiku.SaikuUserDao"/>
+
+    <bean id="userServiceBean" class="com.projecta.mondrianserver.saiku.SaikuUserService">
+        <property name="jdbcUserDAO" ref="userDAO"/>
+        <property name="datasourceService" ref="datasourceServiceBean"/>
+        <property name="iDatasourceManager" ref="repositoryDsManager"/>
+        <property name="adminRoles">
+            <list>
+                <value>ROLE_ADMIN</value>
+            </list>
+        </property>
+        <property name="sessionService" ref="sessionService"/>
+    </bean>
+
+    <bean id="platformBean" class="com.projecta.mondrianserver.saiku.SaikuPlatformUtilsService">
+        <property name="path" value=""/>
+    </bean>
+
+    <bean id="connectionManager" class="com.projecta.mondrianserver.saiku.SaikuConnectionManager"
+        init-method="init" destroy-method="destroy" depends-on="mondrianVFS">
+        <property name="dataSourceManager" ref="repositoryDsManager"/>
+        <property name="sessionService" ref="sessionService"/>
+    </bean>
+
+</beans>
