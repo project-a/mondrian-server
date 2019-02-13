@@ -18,7 +18,12 @@ import org.apache.log4j.Logger;
 import org.postgresql.util.PGobject;
 
 /**
- * A dynamic proxy that intercepts JDBC methods calls
+ * A dynamic proxy that registers itself as the Postgres JDBC driver and
+ * intercepts calls {@link Driver}, {@link Connection}, {@link Statement}
+ * and {@link ResultSet}.
+ *
+ * The proxy uses the {@link SqlRewriter} to modify queries on HLL queries and
+ * returns the value of enum columns as text in result sets.
  */
 public class SqlProxy {
 

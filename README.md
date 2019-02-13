@@ -54,7 +54,7 @@ If you use Saiku in your organization, then please consider [sponsoring Saiku](h
 
 Only one configuration file [mondrian-server.properties](mondrian-server.properties) is used to configure the whole app. No need to unpack the war file. The path to this file is passed via the `mondrian-server.properties` system property.
 
-If you want to use jetty (recommended), then you can run Mondrian Server with 
+If you want to use jetty (recommended), then you can run Mondrian Server with
 
 ```
 java -Dmondrian-server.properties=/path/to/mondrian-server.properties \
@@ -94,9 +94,9 @@ If you want to use another JDBC driver than the included driver for PostgreSQL, 
 
 &nbsp;
 
-## Authentication & ACL 
+## Authentication & ACL
 
-### Saiku 
+### Saiku
 
 There are three different options for securing the `/` endpoint (Saiku):
 
@@ -104,37 +104,37 @@ There are three different options for securing the `/` endpoint (Saiku):
 
 2. Hard-coded single username / password. Set them with the `saikuUsername` and `saikuPassword` properties in [mondrian-server.properties](mondrian-server.properties). Only recommended when the option 3 is not possible.
 
-3. Header based authentication and external ACL. An auth proxy such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) sits infront of Saiku and authenticates users against an external auth provider (e.g. Google, Github, Azure etc.). The proxy adds the email of the authenticated user as a `saiku-user` http header to the request. 
+3. Header based authentication and external ACL. An auth proxy such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) sits infront of Saiku and authenticates users against an external auth provider (e.g. Google, Github, Azure etc.). The proxy adds the email of the authenticated user as a `saiku-user` http header to the request.
 
    Mondrian will then post this user name as `username` form field to an ACL endpoint that is configured via the `saikuAuthorizationUrl` property:
-   
+
         ➜ curl -X POST -F 'username=foo@bar.com' http://localhost:5000/mondrian/saiku/authorize
         {
-          "allowed": false, 
+          "allowed": false,
           "cubes": []
         }
-        
+
         ➜ curl -X POST -F 'username=martin.loetzsch@project-a.com' http://localhost:5000/mondrian/saiku/authorize
         {
-          "allowed": true, 
+          "allowed": true,
           "cubes": [
-            "Cube 1", 
+            "Cube 1",
             "Cube 2"
           ]
         }
-   
+
     The external ACL endpoint either returns an `"allowed": false` JSON object as in the first example or a an `"allowed": true` response followed by the list of all cubes that the user has access to. The user will only be able to access those cubes in Saiku.
-    
+
     A Python implementation that provides such an endpoint can be found in the [mara mondrian](https://github.com/project-a/mara-mondrian) package.
-    
+
     This is our recommended way for exposing Saiku through Nginx:
 
 ```nginx
 server {
     listen 127.0.0.1:81;  # listen as a downstream of an auth proxy
-    
+
     server_name saiku.example.com; # the host name to run Saiku on
-    
+
     location / {
         # set some proxy parameters
         proxy_set_header HOST $http_host;
@@ -143,19 +143,19 @@ server {
         proxy_read_timeout 600;
         proxy_buffering off;
         send_timeout 600;
-    
+
         # the host / port where mondrian server is running
-        proxy_pass http://127.0.0.1:8080; 
-        
+        proxy_pass http://127.0.0.1:8080;
+
         # Somehow needed
-        proxy_set_header Authorization ""; 
-        
+        proxy_set_header Authorization "";
+
         # Add the email or username of the already authenticated user as a header
-        proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;       
+        proxy_set_header saiku-user $http_X_FORWARDED_EMAIL;
     }
 }
 ```
-    
+
 &nbsp;
 
 ### XMLA Server
@@ -166,27 +166,27 @@ There are 2 options:
 
 1. Hard-coded single username / password, configured via the  `xmlaUsername` and `xmlaPassword` properties.
 
-2. External ACL. The XMLA client needs needs to supply HTTP basic auth credentials. The username / password is then posted to an external ACL endpoint (configured via the `xmlaAuthorizationUrl`) like this: 
+2. External ACL. The XMLA client needs needs to supply HTTP basic auth credentials. The username / password is then posted to an external ACL endpoint (configured via the `xmlaAuthorizationUrl`) like this:
 
         ➜ curl -X POST -F 'email=foo@bar.com' -F 'password=123abc' http://localhost:5000/mondrian/xmla/authorize
         {
-          "allowed": false, 
+          "allowed": false,
           "cubes": []
         }
 
         ➜ curl -X POST -F 'email=martin.loetzsch@project-a.com' -F 'password=123abc' http://localhost:5000/mondrian/xmla/authorize
         {
-          "allowed": true, 
+          "allowed": true,
           "cubes": [
-            "Cube 1", 
+            "Cube 1",
             "Cube 2"
           ]
         }
-        
+
    The response is then interpreted in the same way as for the Saiku endpoint.
 
-	This is our recommended nginx config for exposing the XMLA server on the internet:
-	
+    This is our recommended nginx config for exposing the XMLA server on the internet:
+
 ```nginx
 server {
     listen 443; # not behind auth proxy, apply ip restrictions or VPN
@@ -208,13 +208,13 @@ server {
         proxy_buffering off;
         send_timeout 600;
 
-        # Send all requests to single endpoint 
+        # Send all requests to single endpoint
         proxy_pass http://127.0.0.1:8080/xmla-with-auth/;
     }
 
 }
-```	
-	
+```
+
 &nbsp;
 
 
@@ -226,6 +226,24 @@ The `/xmla`, `/flush-caches` and `/stats` endpoints have no ACL at all, don't ex
 
 &nbsp;
 
+## PostgreSQL Compatibility Features
+
+Mondrian Server implements features that improve compatiblity with PostgreSQL:
+
+**Enum Support**: Values of the Postgres `enum` type in fact or dimension tables
+are automatically converted to type text. See class `SqlProxy.java` for more details.
+
+**HyperLogLog Support**: Mondrian Server integrates with the Citus Data
+[HyperLogLog](https://github.com/citusdata/postgresql-hll) extension
+to allow the calculation of an approximated [distinct count](https://docs.citusdata.com/en/stable/articles/hll_count_distinct.html)
+on large datasets.
+Mondrian Server allows fact tables to contain columns of type `hll`
+and automatically uses the `hll_cardinality` function for aggregations
+on these columns. See class `SqlRewriter.java` for more details.
+
+
+&nbsp;
+
 ## Building Mondrian Server
 
 Install **gradle** with `brew install gradle` or `apt-get install gradle`. Then run `gradle` in the project root directory. This will download all required ressources and build `mondrian-server.war` in the project root directory.
@@ -233,7 +251,7 @@ Install **gradle** with `brew install gradle` or `apt-get install gradle`. Then 
 
 &nbsp;
 
-## Updating Mondrian Server 
+## Updating Mondrian Server
 
 The Mondrian Server is built against specific versions of Mondrian
 and Saiku. These are the necessary steps to upgrade one of these components to a newer version.
@@ -263,22 +281,22 @@ To update Saiku to a newer version, follow these steps:
 2. **Update build.gradle**: Edit the `build.gradle` file and set the property `ext.saikuReleaseTag` to the selected release number.
 
 3. **Update dependencies**: The included `build.gradle` contains the merged dependencies from multiple Saiku repositories.
-Check if there were any changes in the `<dependencies>` section in one of the following 'pom.xml' files:
- - [/saiku-core/saiku-olap-util/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-olap-util/pom.xml)
- - [/saiku-core/saiku-service/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-service/pom.xml)
- - [/saiku-core/saiku-web/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-web/pom.xml)
- - [/saiku-core/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/pom.xml)
- - [/pom.xml](https://github.com/OSBI/saiku/blob/master/pom.xml)
+Check if there were any changes in the `<dependencies>` section in one of the following `pom.xml` files:
+   - [/saiku-core/saiku-olap-util/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-olap-util/pom.xml)
+   - [/saiku-core/saiku-service/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-service/pom.xml)
+   - [/saiku-core/saiku-web/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/saiku-web/pom.xml)
+   - [/saiku-core/pom.xml](https://github.com/OSBI/saiku/blob/master/saiku-core/pom.xml)
+   - [/pom.xml](https://github.com/OSBI/saiku/blob/master/pom.xml)
 
-    Update the 'dependencies' section of the `build.gradle` file accordingly.
+   Update the 'dependencies' section of the `build.gradle` file accordingly.
 
 4. **Check Spring components**: The package `com.projecta.mondrianserver.saiku` contains several Spring components that override the original Saiku implementation to
 remove administrative functionality. Check if these classes still compile and fix them if necessary.
 
 5. **Update patched frontend files**: The directory `/src/main/webapp/js` contains 2 patched JavaScript files with minor usability improvements:
 
- - [SessionWorkspace.js](https://github.com/OSBI/saiku/blob/master/saiku-ui/js/saiku/models/SessionWorkspace.js)
- - [SaveQuery.js](https://github.com/OSBI/saiku/blob/master/saiku-ui/js/saiku/views/SaveQuery.js)
+   - [SessionWorkspace.js](https://github.com/OSBI/saiku/blob/master/saiku-ui/js/saiku/models/SessionWorkspace.js)
+   - [SaveQuery.js](https://github.com/OSBI/saiku/blob/master/saiku-ui/js/saiku/views/SaveQuery.js)
 
-    Checkout the updated version of these files and reapply the patch (lines are marked with `// PATCHED`)
+   Checkout the updated version of these files and reapply the patch (lines are marked with `// PATCHED`)
 
