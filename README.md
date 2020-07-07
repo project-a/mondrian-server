@@ -2,7 +2,7 @@
 
 This project bundles and tightly integrates the [Mondrian OLAP engine](http://mondrian.pentaho.com), the Mondrian XMLA server, and the [Saiku Ad-hoc analysis tool](http://meteorite.bi/saiku) in a self-contained and easy-to-configure war file. It allows to run Saiku and an external XMLA based reporting frontend on the same single data source.
 
-If you work with Python, then you can use [Mara Mondrian](https://github.com/project-a/mara-mondrian) to interact with Mondrian Server.
+If you work with Python, then you can use [Mara Mondrian](https://github.com/mara/mara-mondrian) to interact with Mondrian Server.
 
 &nbsp;
 
@@ -32,6 +32,11 @@ This will expose the following apps / apis on [http://localhost:8080](http://loc
 
 &nbsp;
 
+**!!! Important: ** currently Mondrian Server does not support recent Java versions. Please use Java 8 to run or build the project.
+
+&nbsp;
+  
+
 ## Features
 
 Mondrian Server makes a few assumptions / simplifications that have worked well for us in the past:
@@ -46,7 +51,7 @@ Mondrian Server makes a few assumptions / simplifications that have worked well 
 
 - **Simplified user managment in Saiku**: The internal user management and other configuration features of Saiku have been disabled in favor of external ACL and folder based query repositories.
 
-If you use Saiku in your organization, then please consider [sponsoring Saiku](https://www.meteorite.bi/products/saiku/sponsorship).
+If you use Saiku in your organization, then please consider [purchasing a commercial Saiku licence](https://www.meteorite.bi/products/saiku-pricing/).
 
 &nbsp;
 
@@ -104,7 +109,7 @@ There are three different options for securing the `/` endpoint (Saiku):
 
 2. Hard-coded single username / password. Set them with the `saikuUsername` and `saikuPassword` properties in [mondrian-server.properties](mondrian-server.properties). Only recommended when the option 3 is not possible.
 
-3. Header based authentication and external ACL. An auth proxy such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) sits infront of Saiku and authenticates users against an external auth provider (e.g. Google, Github, Azure etc.). The proxy adds the email of the authenticated user as a `saiku-user` http header to the request.
+3. Header based authentication and external ACL. An auth proxy such as the [oauth2_proxy](https://github.com/pusher/oauth2_proxy) sits in front of Saiku and authenticates users against an external auth provider (e.g. Google, Github, Azure etc.). The proxy adds the email of the authenticated user as a `saiku-user` http header to the request.
 
    Mondrian will then post this user name as `username` form field to an ACL endpoint that is configured via the `saikuAuthorizationUrl` property:
 
@@ -125,7 +130,7 @@ There are three different options for securing the `/` endpoint (Saiku):
 
     The external ACL endpoint either returns an `"allowed": false` JSON object as in the first example or a an `"allowed": true` response followed by the list of all cubes that the user has access to. The user will only be able to access those cubes in Saiku.
 
-    A Python implementation that provides such an endpoint can be found in the [mara mondrian](https://github.com/project-a/mara-mondrian) package.
+    A Python implementation that provides such an endpoint can be found in the [mara mondrian](https://github.com/mara/mara-mondrian) package.
 
     This is our recommended way for exposing Saiku through Nginx:
 
