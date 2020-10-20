@@ -4,6 +4,9 @@
 /saiku/
 /saiku-query/
 /mondrian/
+/gradle/
+gradlew
+gradlew.bat
 /.gradle/
 /.settings/
 /.classpath

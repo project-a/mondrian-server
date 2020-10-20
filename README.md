@@ -32,10 +32,9 @@ This will expose the following apps / apis on [http://localhost:8080](http://loc
 
 &nbsp;
 
-**!!! Important: ** currently Mondrian Server does not support recent Java versions. Please use Java 8 to run or build the project.
+**!!! Important:** you can run or build the project with Java version 11.
 
 &nbsp;
-  
 
 ## Features
 
@@ -251,7 +250,7 @@ on these columns. See class `SqlRewriter.java` for more details.
 
 ## Building Mondrian Server
 
-Install **gradle** with `brew install gradle` or `apt-get install gradle`. Then run `gradle` in the project root directory. This will download all required ressources and build `mondrian-server.war` in the project root directory.
+Install **gradle** with `brew install gradle` or `apt-get install gradle`. Then run `gradle` in the project root directory. This will download all required resources and build `mondrian-server.war` in the project root directory.
 
 
 &nbsp;
