@@ -155,11 +155,13 @@ public class MondrianConnector {
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logSql"), "true")) {
-            RolapUtil.SQL_LOGGER.setLevel(Level.DEBUG);
+            //RolapUtil.SQL_LOGGER.setLevel(Level.DEBUG);
+        	Logger.getLogger(RolapUtil.SQL_LOGGER.getName()).setLevel(Level.DEBUG);
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logMdx"), "true")) {
-            RolapUtil.MDX_LOGGER.setLevel(Level.DEBUG);
+            //RolapUtil.MDX_LOGGER.setLevel(Level.DEBUG);
+        	Logger.getLogger(RolapUtil.MDX_LOGGER.getName()).setLevel(Level.DEBUG);
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logXmla"), "true")) {
