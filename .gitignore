@@ -2,6 +2,7 @@
 /build/
 /tmp/
 /gradle/
+/saiku/
 gradlew
 gradlew.bat
 /.gradle/
