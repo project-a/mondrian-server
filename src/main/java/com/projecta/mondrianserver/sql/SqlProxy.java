@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.postgresql.util.PGobject;
 
 /**
@@ -27,7 +29,7 @@ import org.postgresql.util.PGobject;
  */
 public class SqlProxy {
 
-    private static final Logger LOG = Logger.getLogger( SqlProxy.class );
+    private static final Logger LOG = LogManager.getLogger( SqlProxy.class );
 
     // automatically register this proxy as a JDBC driver
     static {

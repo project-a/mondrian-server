@@ -12,8 +12,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Level;
+//import org.apache.logging.log4j.Level;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.olap4j.OlapConnection;
@@ -53,7 +56,7 @@ public class MondrianConnector {
     private static final String DEFAULT_DATASOURCE_NAME = "Mondrian";
     private static final String DEFAULT_CATALOG_NAME    = "Mondrian";
 
-    private static final Logger LOG = Logger.getLogger(MondrianConnector.class);
+    private static final Logger LOG = LogManager.getLogger(MondrianConnector.class);
 
     /**
      * Initializes the mondrian server connection
@@ -151,21 +154,21 @@ public class MondrianConnector {
     private void configureLogLevels() {
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logMondrian"), "true")) {
-            Logger.getLogger("mondrian").setLevel(Level.DEBUG);
+            //LogManager.getLogger("mondrian").setLevel(Level.DEBUG);
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logSql"), "true")) {
             //RolapUtil.SQL_LOGGER.setLevel(Level.DEBUG);
-        	Logger.getLogger(RolapUtil.SQL_LOGGER.getName()).setLevel(Level.DEBUG);
+        	//LogManager.getLogger(RolapUtil.SQL_LOGGER.getName()).setLevel(Level.DEBUG);
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logMdx"), "true")) {
             //RolapUtil.MDX_LOGGER.setLevel(Level.DEBUG);
-        	Logger.getLogger(RolapUtil.MDX_LOGGER.getName()).setLevel(Level.DEBUG);
+        	//LogManager.getLogger(RolapUtil.MDX_LOGGER.getName()).setLevel(Level.DEBUG);
         }
 
         if (StringUtils.equalsIgnoreCase(config.getProperty("logXmla"), "true")) {
-            Logger.getLogger(XmlaServlet.class).setLevel(Level.DEBUG);
+            //LogManager.getLogger(XmlaServlet.class).setLevel(Level.DEBUG);
         }
     }
 

@@ -13,7 +13,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import com.projecta.mondrianserver.sql.SqlFragment.FragmentType;
 
@@ -62,7 +64,7 @@ public class SqlRewriter {
     private static final Pattern IN_CONDITION_PATTERN       = Pattern.compile("\"(\\w+)\".\"(\\w+)\" in \\([\\w', ]+\\)");
 
     private static final String NL = System.getProperty("line.separator");
-    private static final Logger LOG = Logger.getLogger( SqlRewriter.class );
+    private static final Logger LOG = LogManager.getLogger( SqlRewriter.class );
 
 
     /**
