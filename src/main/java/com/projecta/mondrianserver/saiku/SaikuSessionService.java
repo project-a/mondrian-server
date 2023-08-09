@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.saiku.service.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -46,7 +48,7 @@ public class SaikuSessionService implements ISessionService {
     private static final int CACHE_TIME_MINUTES     = 30;
     private static final int REQUEST_TIMEOUT_MILLIS = 30000;
 
-    private static final Logger LOG = Logger.getLogger(SaikuSessionService.class);
+    private static final Logger LOG = LogManager.getLogger(SaikuSessionService.class);
 
 
     @PostConstruct

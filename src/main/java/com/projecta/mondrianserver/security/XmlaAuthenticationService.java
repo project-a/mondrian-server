@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +42,7 @@ public class XmlaAuthenticationService {
     private static final int CACHE_TIME_MINUTES     = 30;
     private static final int REQUEST_TIMEOUT_MILLIS = 30000;
 
-    private static final Logger LOG = Logger.getLogger(XmlaAuthenticationService.class);
+    private static final Logger LOG = LogManager.getLogger(XmlaAuthenticationService.class);
 
     @PostConstruct
     public void init() {

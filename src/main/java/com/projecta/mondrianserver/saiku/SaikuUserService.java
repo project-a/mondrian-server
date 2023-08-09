@@ -11,8 +11,10 @@ import org.saiku.service.ISessionService;
 import org.saiku.service.datasource.DatasourceService;
 import org.saiku.service.datasource.IDatasourceManager;
 import org.saiku.service.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Patched version of UserService that does not use a hardcoded reference to JdbcUserDAO
@@ -25,7 +27,8 @@ public class SaikuUserService extends UserService {
     private DatasourceService datasourceService;
     private ISessionService sessionService;
     private List<String> adminRoles;
-    private static final Logger log = LoggerFactory.getLogger(SaikuUserService.class);
+    //private static final Logger log = LoggerFactory.getLogger(SaikuUserService.class);
+	private static final Logger log = LogManager.getLogger(SaikuUserService.class);
     private static final long serialVersionUID = 1L;
 
     @Override

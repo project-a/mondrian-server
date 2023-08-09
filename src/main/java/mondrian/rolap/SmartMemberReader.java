@@ -50,7 +50,7 @@ import java.util.*;
  * @author jhyde
  * @since 21 December, 2001
  */
-@SuppressWarnings( { "rawtypes", "deprecation", "unused", "override" } )
+@SuppressWarnings( { "rawtypes", "deprecation", "unused" } )
 public class SmartMemberReader implements MemberReader {
     private final SqlConstraintFactory sqlConstraintFactory =
         SqlConstraintFactory.instance();
@@ -298,7 +298,7 @@ public class SmartMemberReader implements MemberReader {
         Map<RolapMember, List<RolapMember>> tempMap =
             new HashMap<RolapMember, List<RolapMember>>();
         for (RolapMember member1 : members) {
-            tempMap.put(member1, Collections.EMPTY_LIST);
+            tempMap.put(member1, Collections.emptyList());
         }
         for (final RolapMember child : children) {
             // todo: We could optimize here. If members.length is small, it's
@@ -318,11 +318,13 @@ public class SmartMemberReader implements MemberReader {
                 // let's ignore it.
                 continue;
             } else if (list == Collections.EMPTY_LIST) {
-                list = new ArrayList<RolapMember>();
+            	list = new ArrayList<RolapMember>();
                 tempMap.put(parentMember, list);
             }
-            ((List)list).add(child);
-            ((List)result).add(child);
+            list.add(child);
+            result.add(child);
+            //((List)list).add(child);
+            //((List)result).add(child);
         }
         synchronized (cacheHelper) {
             for (Map.Entry<RolapMember, List<RolapMember>> entry

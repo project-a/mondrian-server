@@ -95,7 +95,6 @@ public class SaikuDatasourceManager implements IDatasourceManager {
     /**
      * Returns only the preconfigured data source
      */
-    @Override
     public Map<String, SaikuDatasource> getDatasources() {
 
         String dataSourceName = config.getProperty("dataSourceName", "Cubes");
@@ -441,7 +440,6 @@ public class SaikuDatasourceManager implements IDatasourceManager {
 
         sourceFile.renameTo(targetFile);
     }
-
 
 }
 

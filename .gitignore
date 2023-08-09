@@ -1,10 +1,8 @@
 /bin/
 /build/
 /tmp/
-/saiku/
-/saiku-query/
-/mondrian/
 /gradle/
+/saiku/
 gradlew
 gradlew.bat
 /.gradle/
